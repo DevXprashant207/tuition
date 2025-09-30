@@ -17,7 +17,7 @@ function Navbar() {
         <Link to="/blog">Case study</Link>
         <Link to="/news">News/Articles</Link>
         <Link to="/about" >About us</Link>
-        <Link to="/contact" >Contact</Link>
+  <Link to="/consultation" >Free Consultation</Link>
         <Link to="/admin/login" className="bg-[#bfa77a] text-white px-4 py-1 rounded font-semibold ml-2">Admin</Link>
       </div>
       <button className="md:hidden" onClick={() => setOpen(!open)} aria-label="Open menu">
@@ -33,7 +33,7 @@ function Navbar() {
             <Link to="/lawyers" onClick={() => setOpen(false)}>Lawyers</Link>
             <Link to="/blog" onClick={() => setOpen(false)}>Case study</Link>
             <Link to="/about" onClick={() => setOpen(false)}>About us</Link>
-            <Link to="/contact" onClick={() => setOpen(false)}>Contact</Link>
+            <Link to="/consultation" onClick={() => setOpen(false)}>Free Consultation</Link>
             <Link to="/admin/login" className="bg-[#bfa77a] text-white px-4 py-1 rounded font-semibold" onClick={() => setOpen(false)}>Admin</Link>
           </div>
         </div>
