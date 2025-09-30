@@ -1,0 +1,99 @@
+
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+function AdminLogin() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    if (!email || !password) {
+      setError('Please enter both email and password.');
+      return;
+    }
+    if (!/^\S+@\S+\.\S+$/.test(email)) {
+      setError('Please enter a valid email address.');
+      return;
+    }
+    setLoading(true);
+    try {
+      const res = await fetch('https://law-firm-backend-e082.onrender.com/api/admin/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error || 'Incorrect email/password');
+        setLoading(false);
+        return;
+      }
+      localStorage.setItem('admin_token', data.token);
+      setTimeout(() => {
+        navigate('/admin');
+      }, 200); // Fast transition
+    } catch (err) {
+      setError('Network error. Please try again.');
+      setLoading(false);
+    }
+    setLoading(false);
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#f8f6f2] to-[#e5e2dc] font-serif relative">
+      <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1503676382389-4809596d5290?auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center opacity-10 pointer-events-none"></div>
+      <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-2xl p-10 w-full max-w-md animate-fade flex flex-col gap-6 border border-[#e5e2dc]">
+        <div className="flex flex-col items-center mb-2">
+          <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Admin Login" className="h-14 mb-2 rounded-full shadow-lg border border-[#e5e2dc] bg-white" />
+          <h2 className="text-3xl font-bold text-[#7c6a4c] mb-2">Admin Login</h2>
+          <span className="text-[#bfa77a] text-sm font-medium">Sterling & Associates</span>
+          <span className="text-xs text-[#7c6a4c] mt-1 italic">Secure access for authorized personnel only</span>
+        </div>
+        <div>
+          <label className="block text-[#4c3a1a] mb-2 font-semibold">Email</label>
+          <input
+            type="email"
+            className="w-full px-4 py-2 border border-[#e5e2dc] rounded focus:outline-none focus:ring-2 focus:ring-[#bfa77a] bg-[#f8f6f2]"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            disabled={loading}
+            required
+            autoComplete="username"
+          />
+        </div>
+        <div>
+          <label className="block text-[#4c3a1a] mb-2 font-semibold">Password</label>
+          <input
+            type="password"
+            className="w-full px-4 py-2 border border-[#e5e2dc] rounded focus:outline-none focus:ring-2 focus:ring-[#bfa77a] bg-[#f8f6f2]"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            disabled={loading}
+            required
+            autoComplete="current-password"
+          />
+        </div>
+        {error && <div className="mb-2 text-red-600 text-sm text-center animate-fade-in">{error}</div>}
+        <button
+          type="submit"
+          className="w-full bg-[#bfa77a] text-white py-2 rounded font-semibold shadow hover:bg-[#a08a5c] transition-all disabled:opacity-50 text-lg"
+          disabled={loading}
+        >
+          {loading ? (
+            <span className="flex items-center justify-center gap-2">
+              <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" /></svg>
+              Logging in...
+            </span>
+          ) : 'Login'}
+        </button>
+      </form>
+    </div>
+  );
+}
+
+export default AdminLogin;
