@@ -1,9 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-
 function Navbar() {
   const [open, setOpen] = useState(false);
-
   return (
     <nav className="bg-[#f8f6f2] border-b border-[#e5e2dc] px-6 py-3 flex items-center justify-between">
       <div className="flex items-center gap-2">
@@ -26,8 +24,9 @@ function Navbar() {
         <span className={`block w-6 h-0.5 bg-[#7c6a4c] transition-all ${open ? '-rotate-45 -translate-y-2' : ''}`}></span>
       </button>
       {open && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 z-50" onClick={() => setOpen(false)}>
-          <div className="absolute top-0 right-0 w-2/3 max-w-xs bg-[#f8f6f2] h-full shadow-lg p-6 flex flex-col gap-6 animate-slide-in" onClick={e => e.stopPropagation()}>
+        <div className="fixed inset-0 z-50">
+          <div className="absolute inset-0 bg-black bg-opacity-40" onClick={() => setOpen(false)}></div>
+          <div className="absolute top-0 right-0 w-2/3 max-w-xs bg-[#f8f6f2] h-full shadow-lg p-6 flex flex-col gap-6 animate-slide-in" style={{zIndex: 51}} onClick={e => e.stopPropagation()}>
             <Link to="/" onClick={() => setOpen(false)}>Home</Link>
             <Link to="/services" onClick={() => setOpen(false)}>Practice Area</Link>
             <Link to="/lawyers" onClick={() => setOpen(false)}>Lawyers</Link>
