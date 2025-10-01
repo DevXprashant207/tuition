@@ -1,9 +1,15 @@
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import LawyersModule from './LawyersModule';
+import EnquiriesModule from './EnquiriesModule';
+import MediaModule from './MediaModule';
+import PostsModule from './PostsModule';
+import ServicesModule from './ServicesModule';
 import { useNavigate } from 'react-router-dom';
 
 function AdminDashboard() {
   const navigate = useNavigate();
+  const [activeSection, setActiveSection] = useState('dashboard');
   useEffect(() => {
     const token = localStorage.getItem('admin_token');
     if (!token) {
@@ -20,25 +26,41 @@ function AdminDashboard() {
           <span className="font-bold text-lg">Sterling & Associates</span>
         </div>
         <nav className="flex flex-col gap-4">
-          <button className="text-left px-4 py-2 rounded hover:bg-[#bfa77a] hover:text-white transition">Dashboard</button>
-          <button className="text-left px-4 py-2 rounded hover:bg-[#bfa77a] hover:text-white transition">Enquiries</button>
-          <button className="text-left px-4 py-2 rounded hover:bg-[#bfa77a] hover:text-white transition">Lawyers</button>
-          <button className="text-left px-4 py-2 rounded hover:bg-[#bfa77a] hover:text-white transition">Services</button>
-          <button className="text-left px-4 py-2 rounded hover:bg-[#bfa77a] hover:text-white transition">Posts</button>
-          <button className="text-left px-4 py-2 rounded hover:bg-[#bfa77a] hover:text-white transition">Media</button>
+          <button className={`text-left px-4 py-2 rounded transition ${activeSection==='dashboard' ? 'bg-[#bfa77a] text-white' : 'hover:bg-[#bfa77a] hover:text-white'}`} onClick={() => setActiveSection('dashboard')}>Dashboard</button>
+          <button className={`text-left px-4 py-2 rounded transition ${activeSection==='enquiries' ? 'bg-[#bfa77a] text-white' : 'hover:bg-[#bfa77a] hover:text-white'}`} onClick={() => setActiveSection('enquiries')}>Enquiries</button>
+          <button className={`text-left px-4 py-2 rounded transition ${activeSection==='lawyers' ? 'bg-[#bfa77a] text-white' : 'hover:bg-[#bfa77a] hover:text-white'}`} onClick={() => setActiveSection('lawyers')}>Lawyers</button>
+          <button className={`text-left px-4 py-2 rounded transition ${activeSection==='services' ? 'bg-[#bfa77a] text-white' : 'hover:bg-[#bfa77a] hover:text-white'}`} onClick={() => setActiveSection('services')}>Services</button>
+          <button className={`text-left px-4 py-2 rounded transition ${activeSection==='posts' ? 'bg-[#bfa77a] text-white' : 'hover:bg-[#bfa77a] hover:text-white'}`} onClick={() => setActiveSection('posts')}>Posts</button>
+          <button className={`text-left px-4 py-2 rounded transition ${activeSection==='media' ? 'bg-[#bfa77a] text-white' : 'hover:bg-[#bfa77a] hover:text-white'}`} onClick={() => setActiveSection('media')}>Media</button>
         </nav>
         <button className="mt-auto px-4 py-2 rounded bg-[#bfa77a] text-white font-semibold" onClick={() => {localStorage.removeItem('admin_token');navigate('/admin/login');}}>Logout</button>
       </aside>
       {/* Main Content */}
       <main className="flex-1 p-10">
         <h1 className="text-3xl font-bold text-[#23293a] mb-8">Admin Dashboard</h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="bg-white rounded-lg shadow p-6">Enquiries Module (CRUD)</div>
-          <div className="bg-white rounded-lg shadow p-6">Lawyers Module (CRUD)</div>
-          <div className="bg-white rounded-lg shadow p-6">Services Module (CRUD)</div>
-          <div className="bg-white rounded-lg shadow p-6">Posts Module (CRUD)</div>
-          <div className="bg-white rounded-lg shadow p-6">Media Module (CRUD)</div>
-        </div>
+        {activeSection === 'dashboard' && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="bg-white rounded-lg shadow p-6">Welcome to the Admin Dashboard. Select a section from the sidebar.</div>
+          </div>
+        )}
+        {activeSection === 'lawyers' && (
+          <div className="bg-white rounded-lg shadow p-8 max-w-3xl mx-auto">
+            <h2 className="text-2xl font-bold text-[#23293a] mb-6 text-center">Manage Lawyers</h2>
+            <LawyersModule />
+          </div>
+        )}
+        {activeSection === 'enquiries' && (
+          <EnquiriesModule />
+        )}
+        {activeSection === 'media' && (
+          <MediaModule />
+        )}
+        {activeSection === 'posts' && (
+          <PostsModule />
+        )}
+        {activeSection === 'services' && (
+          <ServicesModule />
+        )}
       </main>
     </div>
   );

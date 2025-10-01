@@ -15,7 +15,7 @@ function Navbar() {
         <Link to="/services">Services</Link>
         <Link to="/lawyers">Lawyers</Link>
         <Link to="/blog">Case study</Link>
-        <Link to="/news">News/Articles</Link>
+  <Link to="/news">News</Link>
         <Link to="/about" >About us</Link>
   <Link to="/consultation" >Free Consultation</Link>
         <Link to="/admin/login" className="bg-[#bfa77a] text-white px-4 py-1 rounded font-semibold ml-2">Admin</Link>
@@ -32,6 +32,7 @@ function Navbar() {
             <Link to="/services" onClick={() => setOpen(false)}>Practice Area</Link>
             <Link to="/lawyers" onClick={() => setOpen(false)}>Lawyers</Link>
             <Link to="/blog" onClick={() => setOpen(false)}>Case study</Link>
+            <Link to="/news" onClick={() => setOpen(false)}>News</Link>
             <Link to="/about" onClick={() => setOpen(false)}>About us</Link>
             <Link to="/consultation" onClick={() => setOpen(false)}>Free Consultation</Link>
             <Link to="/admin/login" className="bg-[#bfa77a] text-white px-4 py-1 rounded font-semibold" onClick={() => setOpen(false)}>Admin</Link>

@@ -21,7 +21,7 @@ function StatCard({ value, suffix, label, duration = 1200 }) {
       } else {
         setCount(Math.floor(start));
       }
-    }, 20);
+    }, 100);
     return () => clearInterval(timer);
   }, [value, duration]);
   return (
