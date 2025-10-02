@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 
 const testimonials = [
   {
-    name: 'Jennth White',
-    location: 'San Francisco',
+  name: 'Naman Gupta',
+    location: 'Gate-Number-Two, T-93/I, opposite Saket-District-Court, Khirki Extension, Malviya Nagar, New Delhi, Delhi 110017',
     text: 'The tours in this website are great. I had been really enjoy with my family! The team is very professional and taking care of the customers. Will surely recommend to my friend to join this company!',
     stars: 5,
     image: 'https://randomuser.me/api/portraits/women/44.jpg',
@@ -57,58 +57,40 @@ function StarRating({ stars }) {
 }
 
 function HomeTestimonials() {
-  const [active, setActive] = useState(1);
-  const [direction, setDirection] = useState('');
+  const [active, setActive] = useState(0);
+  const visibleCount = 4;
+  const total = testimonials.length;
 
-  const handleNav = (i) => {
-    setDirection(i > active ? 'right' : 'left');
-    setTimeout(() => setActive(i), 150);
-  };
+  const next = () => setActive((prev) => (prev + 1) % total);
+  const prev = () => setActive((prev) => (prev - 1 + total) % total);
 
   return (
     <section className="relative py-16 px-2 md:px-10 bg-[#f8f6f2]">
       <div className="absolute left-0 top-0 w-full h-full flex items-center justify-center pointer-events-none select-none">
         <span className="text-[7vw] font-bold uppercase text-[#e5e2dc] opacity-10 md:opacity-15" style={{letterSpacing: '0.1em'}}>TESTIMONIALS</span>
       </div>
-      <div className="relative z-10 max-w-5xl mx-auto">
+      <div className="relative z-10 max-w-6xl mx-auto">
         <h2 className="text-3xl md:text-5xl font-serif font-bold text-[#23293a] text-center mb-10">What Our Clients Say</h2>
-        <div className="flex gap-6 justify-center items-stretch">
-          {testimonials.map((t, i) => {
-            let anim = '';
-            if (i === active) anim = direction === 'right' ? 'animate-slide-in-right' : direction === 'left' ? 'animate-slide-in-left' : '';
-            else if (i < active) anim = 'animate-slide-out-left';
-            else if (i > active) anim = 'animate-slide-out-right';
+  <div className="flex flex-col md:flex-row gap-4 md:gap-6 justify-center items-center w-full">
+          {Array.from({ length: visibleCount }).map((_, idx) => {
+            const i = (active + idx) % total;
+            const t = testimonials[i];
             return (
-              <div key={i} className={`bg-white rounded-xl shadow-lg p-8 flex-1 max-w-md transition-all duration-300 ${i === active ? 'scale-105 z-10 border-2 border-[#bfa77a] shadow-xl' : 'opacity-60 scale-95'} ${anim}`} style={{minWidth: '280px'}}>
-                <div className="flex items-center gap-4 mb-4">
-                  <img src={t.image} alt={t.name} className="w-14 h-14 rounded-full object-cover border-2 border-[#e5e2dc]" />
-                  <div>
-                    <div className="font-bold text-lg text-[#23293a]">{t.name}</div>
-                    <div className="text-sm text-[#bfa77a]">{t.location}</div>
-                  </div>
-                  <div className="ml-auto"><StarRating stars={t.stars} /></div>
-                </div>
-                <div className="text-[#23293a] text-base leading-relaxed italic">{t.text}</div>
+              <div key={i} className="bg-white rounded-xl shadow-lg p-4 md:p-6 flex flex-col items-center transition-all duration-300 scale-100 border-2 border-[#e5e2dc]" style={{width: '100%', maxWidth: '220px', minWidth: '160px', height: '220px', maxHeight: '220px'}}>
+                <img src={t.image} alt={t.name} className="w-12 h-12 rounded-full object-cover border-2 border-[#e5e2dc] mb-2" />
+                <div className="font-bold text-base text-[#23293a] text-center">{t.name}</div>
+                <div className="text-xs text-[#bfa77a] text-center mb-1">{t.location}</div>
+                <div className="flex justify-center mb-1"><StarRating stars={t.stars} /></div>
+                <div className="text-[#23293a] text-sm leading-relaxed italic text-center line-clamp-3">{t.text}</div>
               </div>
             );
           })}
         </div>
-        <div className="flex justify-center gap-2 mt-8">
-          {testimonials.map((_, i) => (
-            <button key={i} className={`w-3 h-3 rounded-full ${i === active ? 'bg-[#bfa77a]' : 'bg-[#e5e2dc]'}`} onClick={() => handleNav(i)} />
-          ))}
+        <div className="flex justify-center gap-4 mt-8">
+          <button onClick={prev} className="w-10 h-10 rounded-full bg-white border-2 border-[#bfa77a] flex items-center justify-center text-[#bfa77a] text-xl font-bold shadow hover:bg-[#e5e2dc] transition-all">&#60;</button>
+          <button onClick={next} className="w-10 h-10 rounded-full bg-white border-2 border-[#bfa77a] flex items-center justify-center text-[#bfa77a] text-xl font-bold shadow hover:bg-[#e5e2dc] transition-all">&#62;</button>
         </div>
       </div>
-      <style>{`
-        @keyframes slide-in-right { 0% { opacity: 0; transform: translateX(100px); } 100% { opacity: 1; transform: translateX(0); } }
-        @keyframes slide-in-left { 0% { opacity: 0; transform: translateX(-100px); } 100% { opacity: 1; transform: translateX(0); } }
-        @keyframes slide-out-right { 0% { opacity: 1; transform: translateX(0); } 100% { opacity: 0; transform: translateX(100px); } }
-        @keyframes slide-out-left { 0% { opacity: 1; transform: translateX(0); } 100% { opacity: 0; transform: translateX(-100px); } }
-        .animate-slide-in-right { animation: slide-in-right 0.3s; }
-        .animate-slide-in-left { animation: slide-in-left 0.3s; }
-        .animate-slide-out-right { animation: slide-out-right 0.3s; }
-        .animate-slide-out-left { animation: slide-out-left 0.3s; }
-      `}</style>
     </section>
   );
 }

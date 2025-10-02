@@ -1,20 +1,22 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+
 function Navbar() {
   const [open, setOpen] = useState(false);
+
   return (
     <nav className="bg-[#f8f6f2] border-b border-[#e5e2dc] px-6 py-3 flex items-center justify-between">
       <div className="flex items-center gap-2">
         <img src="https://i.imgur.com/1Q9Z1ZB.png" alt="Logo" className="h-8 w-8" />
-        <span className="font-bold text-lg tracking-wide text-[#7c6a4c]">ATTORNA</span>
+  <span className="font-bold text-lg tracking-wide text-[#7c6a4c]">Gupta Law Firm</span>
       </div>
       <div className="hidden md:flex gap-8 text-[#7c6a4c] font-medium">
         <Link to="/">Home</Link>
         <Link to="/services">Services</Link>
         <Link to="/lawyers">Lawyers</Link>
         <Link to="/blog">Case study</Link>
-  <Link to="/news">News</Link>
-        <Link to="/about" >About us</Link>
+        <Link to="/news">News/Articles</Link>
+  <a href="#about-us" className="cursor-pointer" onClick={e => { e.preventDefault(); document.getElementById('about-us')?.scrollIntoView({ behavior: 'smooth' }); setOpen(false); }}>About us</a>
   <Link to="/consultation" >Free Consultation</Link>
         <Link to="/admin/login" className="bg-[#bfa77a] text-white px-4 py-1 rounded font-semibold ml-2">Admin</Link>
       </div>
@@ -28,11 +30,11 @@ function Navbar() {
           <div className="absolute inset-0 bg-black bg-opacity-40" onClick={() => setOpen(false)}></div>
           <div className="absolute top-0 right-0 w-2/3 max-w-xs bg-[#f8f6f2] h-full shadow-lg p-6 flex flex-col gap-6 animate-slide-in" style={{zIndex: 51}} onClick={e => e.stopPropagation()}>
             <Link to="/" onClick={() => setOpen(false)}>Home</Link>
-            <Link to="/services" onClick={() => setOpen(false)}>Practice Area</Link>
+            <Link to="/services" onClick={() => setOpen(false)}>Services</Link>
             <Link to="/lawyers" onClick={() => setOpen(false)}>Lawyers</Link>
             <Link to="/blog" onClick={() => setOpen(false)}>Case study</Link>
-            <Link to="/news" onClick={() => setOpen(false)}>News</Link>
-            <Link to="/about" onClick={() => setOpen(false)}>About us</Link>
+            <Link to="/news" onClick={() => setOpen(false)}>News/Articles</Link>
+            <a href="#about-us" className="cursor-pointer" onClick={e => { e.preventDefault(); document.getElementById('about-us')?.scrollIntoView({ behavior: 'smooth' }); setOpen(false); }}>About us</a>
             <Link to="/consultation" onClick={() => setOpen(false)}>Free Consultation</Link>
             <Link to="/admin/login" className="bg-[#bfa77a] text-white px-4 py-1 rounded font-semibold" onClick={() => setOpen(false)}>Admin</Link>
           </div>

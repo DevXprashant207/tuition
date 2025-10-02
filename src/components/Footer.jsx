@@ -3,16 +3,16 @@ function Footer() {
     <footer className="bg-[#232220] text-[#bfa77a] pt-16 pb-8 px-4 font-serif">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 pb-12 border-b border-[#35332f]">
         <div className="flex flex-col items-start gap-2">
-          <img src="https://i.imgur.com/1Q9Z1ZB.png" alt="Attorna Logo" className="h-10 mb-2" />
-          <span className="font-bold text-lg tracking-wide text-[#bfa77a]">ATTORNA</span>
+          <img src="https://i.imgur.com/1Q9Z1ZB.png" alt="Gupta Law Firm Logo" className="h-10 mb-2" />
+          <span className="font-bold text-lg tracking-wide text-[#bfa77a]">Gupta Law Firm</span>
         </div>
         <div>
           <h3 className="text-white text-lg mb-3 font-semibold">Contact Info</h3>
           <ul className="space-y-2 text-[#bfa77a]">
             <li className="flex items-center gap-2"><span>📞</span> (1)2345-2345-54</li>
-            <li className="flex items-center gap-2"><span>✉️</span> contact@attornafirm.co</li>
+            <li className="flex items-center gap-2"><span>✉️</span> contact@guptalawfirm.co</li>
             <li className="flex items-center gap-2"><span>⏰</span> Mon — Fri 9.00-18.00</li>
-            <li className="flex items-center gap-2"><span>📍</span> 12th Wall Street NY CV564</li>
+            <li className="flex items-center gap-2"><span>📍</span> Gate-Number-Two, T-93/I, opposite Saket-District-Court, Khirki Extension, Malviya Nagar, New Delhi, Delhi 110017</li>
           </ul>
         </div>
         <div>
@@ -44,7 +44,7 @@ function Footer() {
           <a href="#" aria-label="X" className="hover:text-white transition"><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="w-6 h-6" viewBox="0 0 24 24"><path d="M17.53 3.5h3.47l-7.57 8.62 8.93 11.38h-7.02l-5.51-7.01-6.3 7.01h-3.49l8.09-9.02-8.62-10.98h7.09l5.01 6.39 5.92-6.39zm-2.49 17.5h2.01l-6.51-8.28-2.01 2.28 6.51 6z"/></svg></a>
           <a href="#" aria-label="Instagram" className="hover:text-white transition"><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="w-6 h-6" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.334 3.608 1.308.975.974 1.246 2.242 1.308 3.608.058 1.266.069 1.646.069 4.851s-.011 3.584-.069 4.85c-.062 1.366-.334 2.633-1.308 3.608-.974.975-2.242 1.246-3.608 1.308-1.266.058-1.646.069-4.85.069s-3.584-.011-4.85-.069c-1.366-.062-2.633-.334-3.608-1.308-.975-.974-1.246-2.242-1.308-3.608-.058-1.266-.069-1.646-.069-4.85s.011-3.584.069-4.851c.062-1.366.334-2.633 1.308-3.608.974-.974 2.242-1.246 3.608-1.308 1.266-.058 1.646-.069 4.85-.069zm0-2.163c-3.259 0-3.667.012-4.945.07-1.276.058-2.687.334-3.678 1.325-.991.991-1.267 2.402-1.325 3.678-.058 1.278-.07 1.686-.07 4.945s.012 3.667.07 4.945c.058 1.276.334 2.687 1.325 3.678.991.991 2.402 1.267 3.678 1.325 1.278.058 1.686.07 4.945.07s3.667-.012 4.945-.07c1.276-.058 2.687-.334 3.678-1.325.991-.991 1.267-2.402 1.325-3.678.058-1.278.07-1.686.07-4.945s-.012-3.667-.07-4.945c-.058-1.276-.334-2.687-1.325-3.678-.991-.991-2.402-1.267-3.678-1.325-1.278-.058-1.686-.07-4.945-.07zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zm0 10.162a3.999 3.999 0 1 1 0-7.998 3.999 3.999 0 0 1 0 7.998zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg></a>
         </div>
-        <div className="text-[#bfa77a] text-sm">Copyright © 2025 Attorna, All Right Reserved</div>
+  <div className="text-[#bfa77a] text-sm">Copyright © 2025 Gupta Law Firm, All Rights Reserved</div>
         <button className="bg-[#e5e2dc] text-[#232220] rounded-full p-2 ml-4 shadow hover:bg-[#bfa77a] transition-all" aria-label="Scroll to top" onClick={() => window.scrollTo({top:0,behavior:'smooth'})}>
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" /></svg>
         </button>

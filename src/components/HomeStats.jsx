@@ -37,11 +37,20 @@ function StatCard({ value, suffix, label, duration = 1200 }) {
 function HomeStats() {
   return (
     <section className="bg-white py-12">
-      <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between divide-x divide-[#e5e2dc]">
+      <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between divide-x md:divide-x-0 divide-[#e5e2dc]">
         {stats.map((stat, idx) => (
-          <StatCard key={idx} {...stat} />
+          <div className="w-full md:w-auto">
+            <StatCard key={idx} {...stat} />
+          </div>
         ))}
       </div>
+      <style>{`
+        @media (max-width: 767px) {
+          .home-stats-sep > div:not(:last-child) {
+            margin-bottom: 2.5rem;
+          }
+        }
+      `}</style>
     </section>
   );
 }

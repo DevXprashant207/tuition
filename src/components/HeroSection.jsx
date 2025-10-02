@@ -38,7 +38,7 @@ function HeroSection() {
       </div>
       <div className="flex-1 flex items-center justify-center h-[400px] md:h-[500px]">
         <div className="relative z-10 w-full max-w-[500px] text-left flex flex-col items-start justify-center h-full bg-transparent rounded-lg p-8">
-          <h1 className="text-5xl md:text-5xl font-serif text-[#4c3a1a] mb-6 font-bold">Attorna Law Firm</h1>
+          <h1 className="text-5xl md:text-5xl font-serif text-[#4c3a1a] mb-6 font-bold">Gupta Law Firm</h1>
           <p className="text-lg md:text-lg text-[#4e3b19] mb-6">
             We are a leading law firm in financial &amp; business industry.<br />
             With more than 20 years of experience.
@@ -47,8 +47,8 @@ function HeroSection() {
             CONTACT NOW &rarr;
           </button>
           <div className="mt-8">
-            <span className="block text-3xl font-signature text-[#4c3a1a] mb-2" style={{ fontFamily: 'Dancing Script, cursive' }}>Pauline Smith</span>
-            <span className="block text-xs tracking-widest text-[#7c6a4c]">CEO, ATTORNA LAW FIRM</span>
+            <span className="block text-3xl font-signature text-[#4c3a1a] mb-2" style={{ fontFamily: 'Dancing Script, cursive' }}>Naman Gupta</span>
+            <span className="block text-xs tracking-widest text-[#7c6a4c]">CEO, GUPTA LAW FIRM</span>
           </div>
         </div>
       </div>
