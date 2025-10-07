@@ -24,15 +24,20 @@ const icons = {
   ),
 };
 
-function ServiceCard({ name, description }) {
-  // Pick icon by name, fallback to default
+function ServiceCard({ name, slug, onLearnMore }) {
   let icon = icons[name] || icons['Intellectual Property'];
+
   return (
     <div className="flex flex-col items-start bg-[#f8f6f2] rounded-lg shadow p-8 border border-[#e5e2dc] h-full">
       {icon}
       <h3 className="text-lg font-bold text-[#7c6a4c] mb-2 uppercase tracking-wide">{name}</h3>
-      <p className="text-gray-700 mb-6">{description}</p>
-      <a href="#" className="text-[#7c6a4c] font-semibold text-sm flex items-center gap-1 hover:underline">LEARN MORE <span aria-hidden="true">→</span></a>
+      <p className="text-gray-700 mb-6">{slug}</p>
+      <button
+        onClick={onLearnMore}
+        className="text-[#7c6a4c] font-semibold text-sm flex items-center gap-1 hover:underline"
+      >
+        LEARN MORE <span aria-hidden="true">→</span>
+      </button>
     </div>
   );
 }

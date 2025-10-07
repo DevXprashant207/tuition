@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ImageUploader from '../components/ImageUploader';
 
-const API_BASE = 'https://law-firm-backend-e082.onrender.com';
+const API_BASE = 'http://localhost:3000';
 
 function MediaForm({ onSubmit, initialData, onCancel }) {
   const [form, setForm] = useState(initialData || {

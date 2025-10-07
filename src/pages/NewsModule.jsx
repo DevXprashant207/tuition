@@ -3,12 +3,12 @@ import ImageUploader from '../components/ImageUploader';
 
 const API_BASE = 'https://law-firm-backend-e082.onrender.com';
 
-function LawyerForm({ onSubmit, initialData, onCancel }) {
+function NewsForm({ onSubmit, initialData, onCancel }) {
   const [form, setForm] = useState(initialData || {
-    name: '',
-    specialization: '',
-    experience: '',
-    image: '',
+    title: '',
+    link: '',
+    description: '',
+    imageUrl: '',
   });
 
   const handleChange = e => {
@@ -17,56 +17,53 @@ function LawyerForm({ onSubmit, initialData, onCancel }) {
 
   const handleSubmit = e => {
     e.preventDefault();
-
-    // Map frontend fields to backend fields
-    const payload = {
-      name: form.name,
-      title: form.specialization,
-      bio: form.experience,
-      imageUrl: form.image
-    };
-
-    onSubmit(payload);
+    onSubmit(form);
   };
 
   const handleImageUpload = (imageUrl) => {
-    setForm({ ...form, image: imageUrl });
+    setForm({ ...form, imageUrl });
   };
 
   return (
     <form className="space-y-4" onSubmit={handleSubmit}>
       <input
-        name="name"
-        value={form.name}
-        onChange={handleChange}
-        placeholder="Name"
-        className="w-full border p-2 rounded"
-        required
-      />
-      <input
-        name="specialization"
-        value={form.specialization}
+        name="title"
+        value={form.title}
         onChange={handleChange}
         placeholder="Title"
         className="w-full border p-2 rounded"
         required
       />
       <input
-        name="experience"
-        value={form.experience}
+        name="link"
+        value={form.link}
         onChange={handleChange}
-        placeholder="Service Description"
+        placeholder="Link"
+        className="w-full border p-2 rounded"
+      />
+      <textarea
+        name="description"
+        value={form.description}
+        onChange={handleChange}
+        placeholder="Description"
         className="w-full border p-2 rounded"
         required
       />
       <div>
         <ImageUploader onUpload={handleImageUpload} />
-        {form.image && (
+        {form.imageUrl && (
           <div className="mt-2">
             <img
-              src={form.image}
+              src={form.imageUrl}
               alt="Uploaded"
               className="w-20 h-20 object-cover rounded-full border mx-auto"
+            />
+            <input
+              name="imageUrl"
+              value={form.imageUrl}
+              onChange={handleChange}
+              className="w-full border p-2 rounded mt-2"
+              readOnly
             />
           </div>
         )}
@@ -92,105 +89,120 @@ function LawyerForm({ onSubmit, initialData, onCancel }) {
   );
 }
 
-function LawyersModule() {
-  const [lawyers, setLawyers] = useState([]);
+function NewsModule() {
+  const [newsList, setNewsList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [editing, setEditing] = useState(null);
   const [showForm, setShowForm] = useState(false);
 
   const token = localStorage.getItem('token'); // admin token
 
-  const fetchLawyers = async () => {
+  const fetchNews = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${API_BASE}/api/lawyers`);
+      const res = await fetch(`${API_BASE}/api/news/`);
       const data = await res.json();
-      if (Array.isArray(data.data)) {
-        setLawyers(data.data);
-      } else if (Array.isArray(data)) {
-        setLawyers(data);
+      if (Array.isArray(data)) {
+        setNewsList(data);
       } else {
-        setLawyers([]);
+        setNewsList([]);
       }
     } catch (err) {
       console.error(err);
-      setLawyers([]);
+      setNewsList([]);
     }
     setLoading(false);
   };
 
   useEffect(() => {
-    fetchLawyers();
+    fetchNews();
   }, []);
 
-  const handleCreate = async (payload) => {
+  const handleCreate = async (item) => {
     try {
-      await fetch(`${API_BASE}/api/admin/lawyers`, {
+      const res = await fetch(`${API_BASE}/api/admin/news/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(item)
       });
-      setShowForm(false);
-      fetchLawyers();
+      const data = await res.json();
+      if (!data.error) {
+        setShowForm(false);
+        fetchNews();
+      } else {
+        alert(data.error);
+      }
     } catch (err) {
-      console.error('Failed to create lawyer:', err);
+      console.error('Create news error:', err);
     }
   };
 
-  const handleUpdate = async (payload) => {
+  const handleUpdate = async (item) => {
+    if (!editing || !editing.id) return;
     try {
-      await fetch(`${API_BASE}/api/admin/lawyers/${editing.id}`, {
+      const res = await fetch(`${API_BASE}/api/admin/news/${editing.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(item)
       });
-      setEditing(null);
-      setShowForm(false);
-      fetchLawyers();
+      const data = await res.json();
+      if (!data.error) {
+        setEditing(null);
+        setShowForm(false);
+        fetchNews();
+      } else {
+        alert(data.error);
+      }
     } catch (err) {
-      console.error('Failed to update lawyer:', err);
+      console.error('Update news error:', err);
     }
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this lawyer?')) return;
+    if (!id) return;
+    if (!window.confirm('Are you sure you want to delete this news?')) return;
     try {
-      await fetch(`${API_BASE}/api/admin/lawyers/${id}`, {
+      const res = await fetch(`${API_BASE}/api/admin/news/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
-      fetchLawyers();
+      const data = await res.json();
+      if (!data.error) {
+        fetchNews();
+      } else {
+        alert(data.error);
+      }
     } catch (err) {
-      console.error('Failed to delete lawyer:', err);
+      console.error('Delete news error:', err);
     }
   };
 
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-bold text-[#23293a]">Lawyers</h2>
+        <h2 className="text-xl font-bold text-[#23293a]">News</h2>
         <button
           className="bg-[#bfa77a] text-white px-4 py-2 rounded"
           onClick={() => { setShowForm(true); setEditing(null); }}
         >
-          Add Lawyer
+          Add News
         </button>
       </div>
 
       {showForm && (
         <div className="mb-8 bg-[#f8f6f2] p-6 rounded-lg shadow">
           <h3 className="text-lg font-semibold text-[#23293a] mb-4 text-center">
-            {editing ? 'Edit Lawyer' : 'Add New Lawyer'}
+            {editing ? 'Edit News' : 'Add New News'}
           </h3>
-          <LawyerForm
+          <NewsForm
             onSubmit={editing ? handleUpdate : handleCreate}
             initialData={editing}
             onCancel={() => { setShowForm(false); setEditing(null); }}
@@ -204,34 +216,36 @@ function LawyersModule() {
         <table className="w-full border mt-4">
           <thead>
             <tr className="bg-[#f8f6f2]">
-              <th className="p-2 border">Name</th>
               <th className="p-2 border">Title</th>
-              <th className="p-2 border">Service Description</th>
+              <th className="p-2 border">Link</th>
+              <th className="p-2 border">Description</th>
               <th className="p-2 border">Image</th>
               <th className="p-2 border">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {[...lawyers].reverse().map(lawyer => (
-              <tr key={lawyer.id} className="text-center">
-                <td className="p-2 border">{lawyer.name}</td>
-                <td className="p-2 border">{lawyer.title}</td>
-                <td className="p-2 border">{lawyer.bio}</td>
+            {[...newsList].reverse().map(item => (
+              <tr key={item.id} className="text-center">
+                <td className="p-2 border">{item.title}</td>
                 <td className="p-2 border">
-                  {lawyer.imageUrl
-                    ? <img src={lawyer.imageUrl} alt="" className="w-12 h-12 object-cover rounded-full mx-auto" />
+                  {item.link ? <a href={item.link} target="_blank" rel="noreferrer">{item.link}</a> : 'N/A'}
+                </td>
+                <td className="p-2 border">{item.description}</td>
+                <td className="p-2 border">
+                  {item.imageUrl
+                    ? <img src={item.imageUrl} alt="" className="w-12 h-12 object-cover rounded-full mx-auto" />
                     : 'N/A'}
                 </td>
                 <td className="p-2 border">
                   <button
                     className="bg-blue-500 text-white px-2 py-1 rounded mr-2"
-                    onClick={() => { setEditing(lawyer); setShowForm(true); }}
+                    onClick={() => { setEditing(item); setShowForm(true); }}
                   >
                     Edit
                   </button>
                   <button
                     className="bg-red-500 text-white px-2 py-1 rounded"
-                    onClick={() => handleDelete(lawyer.id)}
+                    onClick={() => handleDelete(item.id)}
                   >
                     Delete
                   </button>
@@ -245,4 +259,4 @@ function LawyersModule() {
   );
 }
 
-export default LawyersModule;
+export default NewsModule;

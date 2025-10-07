@@ -11,6 +11,7 @@ import HomeTestimonials from './components/HomeTestimonials';
 import HomeCaseStudies from './components/HomeCaseStudies';
 import ConsultationForm from './components/ConsultationForm';
 import Services from './pages/Services';
+import ServiceDetail from './pages/ServiceDetail';
 import Lawyers from './pages/Lawyers';
 import Blog from './pages/Blog';
 import Contact from './pages/Contact';
@@ -18,6 +19,7 @@ import AdminLogin from './pages/AdminLogin';
 import News from './pages/News';
 import NewsDetail from './pages/NewsDetail';
 import AdminNews from './pages/AdminNews';
+import AdminEnquiries from './pages/AdminEnquiries';
 import './App.css';
 
 function App() {
@@ -40,6 +42,7 @@ function App() {
             } />
             <Route path="/consultation" element={<ConsultationForm />} />
             <Route path="/services" element={<Services />} />
+            <Route path="/services/:id" element={<ServiceDetail />} />
             <Route path="/lawyers" element={<Lawyers />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/news" element={<News />} />
@@ -47,6 +50,7 @@ function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/admin/news" element={<AdminNews />} />
+            <Route path="/admin/enquiries" element={<AdminEnquiries />} />
           </Routes>
         </div>
         <Footer />

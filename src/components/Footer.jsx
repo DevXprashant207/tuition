@@ -1,9 +1,10 @@
+import logo from '../assets/logo.jpg'; 
 function Footer() {
   return (
     <footer className="bg-[#232220] text-[#bfa77a] pt-16 pb-8 px-4 font-serif">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 pb-12 border-b border-[#35332f]">
         <div className="flex flex-col items-start gap-2">
-          <img src="https://i.imgur.com/1Q9Z1ZB.png" alt="Gupta Law Firm Logo" className="h-10 mb-2" />
+          <img src={logo} alt="Gupta Law Firm Logo" className="h-10 mb-2" />
           <span className="font-bold text-lg tracking-wide text-[#bfa77a]">Gupta Law Firm</span>
         </div>
         <div>
@@ -25,14 +26,19 @@ function Footer() {
           </ul>
         </div>
         <div>
-          <h3 className="text-white text-lg mb-3 font-semibold">Newsletter</h3>
-          <p className="mb-2 text-[#bfa77a]">Subscribe to our newsletter</p>
-          <form className="flex">
-            <input type="email" placeholder="Enter Your Email Address" className="px-4 py-2 rounded-l bg-white text-[#232220] focus:outline-none" />
-            <button type="submit" className="bg-[#bfa77a] px-4 py-2 rounded-r text-white font-bold flex items-center">
-              <span className="material-icons">send</span>
-            </button>
-          </form>
+          <h3 className="text-white text-lg mb-3 font-semibold">Our Location</h3>
+          <div className="rounded-lg overflow-hidden shadow-lg border border-[#e5e2dc]">
+            <iframe
+              title="Gupta Law Firm Location"
+              src="https://www.google.com/maps?q=Gate-Number-Two,+T-93/I,+opposite+Saket-District-Court,+Khirki+Extension,+Malviya+Nagar,+New+Delhi,+Delhi+110017&output=embed"
+              width="100%"
+              height="180"
+              style={{ border: 0 }}
+              allowFullScreen=""
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            ></iframe>
+          </div>
         </div>
       </div>
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between pt-6">

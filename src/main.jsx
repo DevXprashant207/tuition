@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
@@ -8,6 +7,8 @@ import Services from './pages/Services';
 import Lawyers from './pages/Lawyers';
 import Blog from './pages/Blog';
 import Contact from './pages/Contact';
+import News from './pages/News';          // ✅ Add this
+import NewsDetail from './pages/NewsDetail'; // ✅ Add this
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import './index.css';
@@ -22,6 +23,8 @@ createRoot(document.getElementById('root')).render(
           <Route path="lawyers" element={<Lawyers />} />
           <Route path="blog" element={<Blog />} />
           <Route path="contact" element={<Contact />} />
+          <Route path="news" element={<News />} /> {/* ✅ Added */}
+          <Route path="news/:id" element={<NewsDetail />} /> {/* ✅ Added */}
         </Route>
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/admin" element={<AdminDashboard />} />

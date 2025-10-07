@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-const API = 'https://law-firm-backend-e082.onrender.com/api';
+const API = 'http://localhost:3000/api';
 
 function AdminNews() {
   const [news, setNews] = useState([]);

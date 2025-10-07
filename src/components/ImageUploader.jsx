@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const API_BASE = 'https://law-firm-backend-e082.onrender.com';
+const API_BASE = 'http://localhost:3000';
 
 function ImageUploader({ onUpload }) {
   const [file, setFile] = useState(null);

@@ -33,7 +33,7 @@ function AdminLogin() {
         setLoading(false);
         return;
       }
-      localStorage.setItem('admin_token', data.token);
+      localStorage.setItem('token', data.token);
       setTimeout(() => {
         navigate('/admin');
       }, 200); // Fast transition

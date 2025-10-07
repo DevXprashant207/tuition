@@ -39,8 +39,8 @@ function HomeStats() {
     <section className="bg-white py-12">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between divide-x md:divide-x-0 divide-[#e5e2dc]">
         {stats.map((stat, idx) => (
-          <div className="w-full md:w-auto">
-            <StatCard key={idx} {...stat} />
+          <div className="w-full md:w-auto" key={idx}>
+            <StatCard {...stat} />
           </div>
         ))}
       </div>

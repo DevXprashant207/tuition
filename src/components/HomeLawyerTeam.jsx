@@ -6,7 +6,7 @@ function HomeLawyerTeam() {
   const [lawyers, setLawyers] = useState([]);
   const [startIdx, setStartIdx] = useState(0);
   useEffect(() => {
-    fetch('https://law-firm-backend-e082.onrender.com/api/lawyers')
+  fetch('https://law-firm-backend-e082.onrender.com/api/lawyers')
       .then(res => res.json())
       .then(data => {
         if (data.success) {
