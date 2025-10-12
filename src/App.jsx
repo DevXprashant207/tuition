@@ -1,5 +1,5 @@
-
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import HeroSection from './components/HeroSection';
@@ -21,15 +21,33 @@ import News from './pages/News';
 import NewsDetail from './pages/NewsDetail';
 import AdminNews from './pages/AdminNews';
 import AdminEnquiries from './pages/AdminEnquiries';
+import DisclaimerModal from './components/DisclaimerModal'; // import it
 import './App.css';
 
 function App() {
+  const [showDisclaimer, setShowDisclaimer] = useState(false);
+
+  useEffect(() => {
+    const agreed = localStorage.getItem('disclaimerAgreed');
+    if (!agreed) {
+      setShowDisclaimer(true);
+    }
+  }, []);
+
+  const handleAgree = () => {
+    localStorage.setItem('disclaimerAgreed', 'true');
+    setShowDisclaimer(false);
+  };
+
   return (
-      <div className="min-h-screen bg-[#f8f6f2] font-serif flex flex-col">
-        <Navbar />
-        <div className="flex-1">
-          <Routes>
-            <Route path="/" element={
+    <div className="min-h-screen bg-[#f8f6f2] font-serif flex flex-col relative">
+      {showDisclaimer && <DisclaimerModal onClose={handleAgree} />}
+      <Navbar />
+      <div className="flex-1">
+        <Routes>
+          <Route
+            path="/"
+            element={
               <>
                 <HeroSection />
                 <HomeAboutUs />
@@ -40,22 +58,23 @@ function App() {
                 <HomeCaseStudies />
                 <ConsultationForm />
               </>
-            } />
-            <Route path="/consultation" element={<ConsultationForm />} />
-            <Route path="/services" element={<Services />} />
-            <Route path="/services/:id" element={<ServiceDetails />} />
-            <Route path="/lawyers" element={<Lawyers />} />
-            <Route path="/blog" element={<Blog />} />
-            <Route path="/blog/:slug" element={<BlogDetail />} />
-            <Route path="/news" element={<News />} />
-            <Route path="/news/:id" element={<NewsDetail />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/admin/login" element={<AdminLogin />} />
-            <Route path="/admin/news" element={<AdminNews />} />
-            <Route path="/admin/enquiries" element={<AdminEnquiries />} />
-          </Routes>
-        </div>
-        <Footer />
+            }
+          />
+          <Route path="/consultation" element={<ConsultationForm />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/services/:id" element={<ServiceDetails />} />
+          <Route path="/lawyers" element={<Lawyers />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<BlogDetail />} />
+          <Route path="/news" element={<News />} />
+          <Route path="/news/:id" element={<NewsDetail />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/admin/news" element={<AdminNews />} />
+          <Route path="/admin/enquiries" element={<AdminEnquiries />} />
+        </Routes>
+      </div>
+      <Footer />
     </div>
   );
 }

@@ -14,17 +14,6 @@ function HeroSection() {
     return () => clearInterval(interval);
   }, [images.length]);
 
-  // ✅ Auto-scroll to consultation after 5 seconds
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      const formSection = document.getElementById('consultation');
-      if (formSection) {
-        formSection.scrollIntoView({ behavior: 'smooth' });
-      }
-    }, 5000); // 5 seconds delay
-    return () => clearTimeout(timer);
-  }, []);
-
   const bgImage = 'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=1200&q=80';
 
   return (
