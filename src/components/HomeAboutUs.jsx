@@ -3,7 +3,7 @@ function HomeAboutUs() {
     <section id="about-us" className="relative py-20 px-4 md:px-0 bg-[#f3f3f3] flex justify-center items-center">
       <div className="max-w-5xl w-full mx-auto bg-white rounded-2xl shadow-xl flex flex-col md:flex-row overflow-hidden">
         <div className="flex-1 p-10 flex flex-col justify-center">
-          <h3 className="uppercase text-[#23293a] font-bold tracking-widest text-lg mb-2">About Gupta Law Firm</h3>
+          <h3 className="uppercase text-[#23293a] font-bold tracking-widest text-lg mb-2">About Gupta Law Offices</h3>
           <div className="w-12 h-1 bg-[#bfa77a] mb-6" />
           <p className="text-[#000000] text-lg leading-relaxed mb-8">
             Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. A small river.
