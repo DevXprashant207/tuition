@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const icons = {
   'Intellectual Property': (
@@ -24,16 +25,19 @@ const icons = {
   ),
 };
 
-function ServiceCard({ name, slug, onLearnMore }) {
-  let icon = icons[name] || icons['Intellectual Property'];
+function ServiceCard({ name, slug }) {
+  const navigate = useNavigate();
+  const icon = icons[name] || icons['Intellectual Property'];
 
   return (
     <div className="flex flex-col items-start bg-[#f8f6f2] rounded-lg shadow p-8 border border-[#cfac33] h-full">
       {icon}
       <h3 className="text-lg font-bold text-[#cfac33] mb-2 uppercase tracking-wide">{name}</h3>
-      <p className="text-gray-900 mb-6">{slug}</p>
+      <p className="text-gray-900 mb-6 line-clamp-2">
+        {slug ? slug.replace(/-/g, ' ') : 'Click below to learn more.'}
+      </p>
       <button
-        onClick={onLearnMore}
+        onClick={() => navigate(`/services/${slug}`)}
         className="text-[#cfac33] font-semibold text-sm flex items-center gap-1 hover:underline"
       >
         LEARN MORE <span aria-hidden="true">→</span>

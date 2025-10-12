@@ -23,7 +23,7 @@ function News() {
       <div className="max-w-4xl mx-auto">
         <h1 className="text-4xl font-bold text-[#23293a] mb-8 text-center">Latest News</h1>
 
-        {loading && <div className="text-center text-[#bfa77a]">Loading...</div>}
+        {loading && <div className="text-center text-[#cfac33]">Loading...</div>}
         {error && <div className="text-center text-red-600">{error}</div>}
 
         <div className="grid md:grid-cols-2 gap-8">
@@ -32,7 +32,7 @@ function News() {
               key={item.id}
               className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-all border border-[#e5e2dc] flex flex-col"
             >
-              <h2 className="text-2xl font-bold text-[#7c6a4c] mb-2">{item.title}</h2>
+              <h2 className="text-2xl font-bold text-[#cfac33] mb-2">{item.title}</h2>
               {item.link && (
                 <a
                   href={item.link}

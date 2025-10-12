@@ -52,22 +52,22 @@ function AdminDashboard() {
       {/* Sidebar */}
       <aside className="w-64 bg-[#23293a] text-white flex flex-col py-8 px-4">
         <div className="flex items-center gap-2 mb-8">
-          <span className="bg-[#bfa77a] rounded-full p-2">
+          <span className="bg-[#cfac33] rounded-full p-2">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17v-6a2 2 0 012-2h2a2 2 0 012 2v6m-6 0h6" />
             </svg>
           </span>
-          <span className="font-bold text-lg">Sterling & Associates</span>
+          <span className="font-bold text-lg">Gupta Law Offices</span>
         </div>
         <nav className="flex flex-col gap-4">
-          <button className={`text-left px-4 py-2 rounded transition ${activeSection==='dashboard' ? 'bg-[#bfa77a] text-white' : 'hover:bg-[#bfa77a] hover:text-white'}`} onClick={() => setActiveSection('dashboard')}>Dashboard</button>
-          <button className={`text-left px-4 py-2 rounded transition ${activeSection==='enquiries' ? 'bg-[#bfa77a] text-white' : 'hover:bg-[#bfa77a] hover:text-white'}`} onClick={() => setActiveSection('enquiries')}>Enquiries</button>
-          <button className={`text-left px-4 py-2 rounded transition ${activeSection==='lawyers' ? 'bg-[#bfa77a] text-white' : 'hover:bg-[#bfa77a] hover:text-white'}`} onClick={() => setActiveSection('lawyers')}>Lawyers</button>
-          <button className={`text-left px-4 py-2 rounded transition ${activeSection==='services' ? 'bg-[#bfa77a] text-white' : 'hover:bg-[#bfa77a] hover:text-white'}`} onClick={() => setActiveSection('services')}>Services</button>
-          <button className={`text-left px-4 py-2 rounded transition ${activeSection==='posts' ? 'bg-[#bfa77a] text-white' : 'hover:bg-[#bfa77a] hover:text-white'}`} onClick={() => setActiveSection('posts')}>Blogs & Articles</button>
-          <button className={`text-left px-4 py-2 rounded transition ${activeSection==='news' ? 'bg-[#bfa77a] text-white' : 'hover:bg-[#bfa77a] hover:text-white'}`} onClick={() => setActiveSection('news')}>News</button>
+          <button className={`text-left px-4 py-2 rounded transition ${activeSection==='dashboard' ? 'bg-[#cfac33] text-white' : 'hover:bg-[#cfac33] hover:text-white'}`} onClick={() => setActiveSection('dashboard')}>Dashboard</button>
+          <button className={`text-left px-4 py-2 rounded transition ${activeSection==='enquiries' ? 'bg-[#cfac33] text-white' : 'hover:bg-[#cfac33] hover:text-white'}`} onClick={() => setActiveSection('enquiries')}>Enquiries</button>
+          <button className={`text-left px-4 py-2 rounded transition ${activeSection==='lawyers' ? 'bg-[#cfac33] text-white' : 'hover:bg-[#cfac33] hover:text-white'}`} onClick={() => setActiveSection('lawyers')}>Lawyers</button>
+          <button className={`text-left px-4 py-2 rounded transition ${activeSection==='services' ? 'bg-[#cfac33] text-white' : 'hover:bg-[#cfac33] hover:text-white'}`} onClick={() => setActiveSection('services')}>Services</button>
+          <button className={`text-left px-4 py-2 rounded transition ${activeSection==='posts' ? 'bg-[#cfac33] text-white' : 'hover:bg-[#cfac33] hover:text-white'}`} onClick={() => setActiveSection('posts')}>Blogs & Articles</button>
+          <button className={`text-left px-4 py-2 rounded transition ${activeSection==='news' ? 'bg-[#cfac33] text-white' : 'hover:bg-[#cfac33] hover:text-white'}`} onClick={() => setActiveSection('news')}>News</button>
         </nav>
-        <button className="mt-auto px-4 py-2 rounded bg-[#bfa77a] text-white font-semibold" onClick={() => {localStorage.removeItem('token');navigate('/admin/login');}}>Logout</button>
+        <button className="mt-auto px-4 py-2 rounded bg-[#cfac33] text-white font-semibold" onClick={() => {localStorage.removeItem('token');navigate('/admin/login');}}>Logout</button>
       </aside>
 
       {/* Main Content */}
@@ -78,19 +78,19 @@ function AdminDashboard() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="bg-white p-6 rounded-lg shadow hover:shadow-xl transition">
               <h2 className="text-xl font-semibold text-[#23293a] mb-2">News</h2>
-              <p className="text-3xl font-bold text-[#bfa77a]">{counts.news}</p>
+              <p className="text-3xl font-bold text-[#cfac33]">{counts.news}</p>
             </div>
             <div className="bg-white p-6 rounded-lg shadow hover:shadow-xl transition">
               <h2 className="text-xl font-semibold text-[#23293a] mb-2">Lawyers</h2>
-              <p className="text-3xl font-bold text-[#bfa77a]">{counts.lawyers}</p>
+              <p className="text-3xl font-bold text-[#cfac33]">{counts.lawyers}</p>
             </div>
             <div className="bg-white p-6 rounded-lg shadow hover:shadow-xl transition">
               <h2 className="text-xl font-semibold text-[#23293a] mb-2">Posts</h2>
-              <p className="text-3xl font-bold text-[#bfa77a]">{counts.posts}</p>
+              <p className="text-3xl font-bold text-[#cfac33]">{counts.posts}</p>
             </div>
             <div className="bg-white p-6 rounded-lg shadow hover:shadow-xl transition">
               <h2 className="text-xl font-semibold text-[#23293a] mb-2">Services</h2>
-              <p className="text-3xl font-bold text-[#bfa77a]">{counts.services}</p>
+              <p className="text-3xl font-bold text-[#cfac33]">{counts.services}</p>
             </div>
           </div>
         )}

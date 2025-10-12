@@ -29,7 +29,7 @@ function Blog() {
 
   return (
     <div className="max-w-6xl mx-auto py-16 px-4">
-      <h2 className="text-3xl font-bold text-[#7c6a4c] mb-12 text-center">Case Studies & Blog</h2>
+      <h2 className="text-3xl font-bold text-[#cfac33] mb-12 text-center">Case Studies & Blog</h2>
 
       {posts.length === 0 ? (
         <div className="text-center text-gray-500">No posts found.</div>

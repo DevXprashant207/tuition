@@ -29,7 +29,7 @@ function BlogDetail() {
   return (
     <div className="max-w-4xl mx-auto py-16 px-6">
       <h1 className="text-4xl font-bold text-[#23293a] mb-4">{post.title}</h1>
-      <h2 className="text-lg font-semibold text-[#7c6a4c] mb-3">{post.slug}</h2>
+      <h2 className="text-lg font-semibold text-[#cfac33] mb-3">{post.slug}</h2>
       <p className="text-sm text-gray-500 mb-6">
         {new Date(post.createdAt).toLocaleDateString('en-US', {
           year: 'numeric', month: 'short', day: 'numeric'

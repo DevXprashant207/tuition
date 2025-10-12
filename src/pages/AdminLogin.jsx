@@ -50,8 +50,8 @@ function AdminLogin() {
       <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-2xl p-10 w-full max-w-md animate-fade flex flex-col gap-6 border border-[#e5e2dc]">
         <div className="flex flex-col items-center mb-2">
           <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Admin Login" className="h-14 mb-2 rounded-full shadow-lg border border-[#e5e2dc] bg-white" />
-          <h2 className="text-3xl font-bold text-[#7c6a4c] mb-2">Admin Login</h2>
-          <span className="text-[#bfa77a] text-sm font-medium">Sterling & Associates</span>
+          <h2 className="text-3xl font-bold text-[#cfac33] mb-2">Admin Login</h2>
+          <span className="text-[#f5c56d] text-sm font-medium">Gupta Law Offices</span>
           <span className="text-xs text-[#7c6a4c] mt-1 italic">Secure access for authorized personnel only</span>
         </div>
         <div>
@@ -81,7 +81,7 @@ function AdminLogin() {
         {error && <div className="mb-2 text-red-600 text-sm text-center animate-fade-in">{error}</div>}
         <button
           type="submit"
-          className="w-full bg-[#bfa77a] text-white py-2 rounded font-semibold shadow hover:bg-[#a08a5c] transition-all disabled:opacity-50 text-lg"
+          className="w-full bg-[#cfac33] text-white py-2 rounded font-semibold shadow hover:bg-[#cfac33] transition-all disabled:opacity-50 text-lg"
           disabled={loading}
         >
           {loading ? (
