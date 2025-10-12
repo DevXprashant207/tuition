@@ -29,7 +29,7 @@ function StatCard({ value, suffix, label, duration = 1200 }) {
       <div className="text-4xl md:text-5xl font-serif text-[#23293a] font-bold mb-2">
         {count}{suffix}
       </div>
-      <div className="text-base md:text-lg text-[#7c6a4c] font-medium mb-1 text-center">{label}</div>
+      <div className="text-base md:text-lg text-[#cfac33] font-medium mb-1 text-center">{label}</div>
     </div>
   );
 }

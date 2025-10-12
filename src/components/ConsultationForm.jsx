@@ -61,10 +61,10 @@ function ConsultationForm() {
   };
 
   return (
-    <section id="consultation" className="bg-[#f8f6f2] py-16 px-4 md:px-10">
+    <section id="consultation" className="bg-white py-16 px-4 md:px-10">
       <div className="max-w-2xl mx-auto">
         <h2 className="text-2xl md:text-4xl font-bold text-[#23293a] mb-2 text-left tracking-widest uppercase">Contact Us</h2>
-        <h3 className="text-base md:text-lg font-serif font-bold text-[#7c6a4c] mb-6 text-left leading-tight">
+        <h3 className="text-base md:text-lg font-serif font-bold text-[#cfac33] mb-6 text-left leading-tight">
           Law is a complex matter that can lead to significant problems if disregarded. Allow us to assist you!
         </h3>
         {thankYou ? (
@@ -100,7 +100,7 @@ function ConsultationForm() {
               <textarea name="message" value={form.message} onChange={handleChange} placeholder="Message*" rows={4} className="w-full p-3 rounded bg-white border border-[#e5e2dc] focus:outline-none" />
               {errors.message && <div className="text-xs text-[#bfa77a] mt-1">{errors.message}</div>}
             </div>
-            <button type="submit" className="w-full bg-[#bfa77a] text-white py-4 rounded font-bold text-lg tracking-wide shadow hover:bg-[#a08a5c] transition-all">
+            <button type="submit" className="w-full bg-[#cfac33] text-white py-4 rounded font-bold text-lg tracking-wide shadow hover:bg-[#e7bf2e] transition-all">
               SUBMIT NOW
             </button>
           </form>

@@ -57,7 +57,7 @@ function HeroSection() {
             onClick={() =>
               document.getElementById('consultation')?.scrollIntoView({ behavior: 'smooth' })
             }
-            className="bg-[#bfa77a] text-white px-7 py-3 rounded font-semibold mb-10 shadow hover:bg-[#a08a5c] transition-all"
+            className="bg-[#cfac33] text-white px-7 py-3 rounded font-semibold mb-10 shadow hover:bg-[#f0c62e] transition-all"
           >
             CONTACT NOW &rarr;
           </button>

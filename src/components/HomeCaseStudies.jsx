@@ -6,9 +6,9 @@ function CaseCard({ title, category, description }) {
   return (
     <div className="flex flex-col items-center bg-[#f8f6f2] rounded-xl shadow-md p-4 transition-transform hover:-translate-y-1 hover:shadow-lg w-64 border border-[#e5e2dc]">
       <img src={sliderImg} alt={title} className="w-56 h-36 object-cover rounded-lg mb-3 border-2 border-[#e5e2dc]" />
-      <h4 className="text-lg font-bold text-[#23293a] mb-1 text-center font-serif">{title}</h4>
-      <span className="text-sm text-[#bfa77a] mb-1 text-center font-medium">{category}</span>
-      <p className="text-xs text-[#23293a] text-center mt-1 leading-relaxed">{description}</p>
+      <h4 className="text-lg font-bold text-black mb-1 text-center font-serif">{title}</h4>
+      <span className="text-sm text-[#cfac33] mb-1 text-center font-medium">{category}</span>
+      <p className="text-xs text-black text-center mt-1 leading-relaxed">{description}</p>
     </div>
   );
 }
@@ -59,15 +59,15 @@ function HomeCaseStudies() {
       </div>
       <div className="relative z-10 max-w-6xl mx-auto">
         <div className="flex items-center justify-between mb-8">
-          <h2 className="text-3xl md:text-4xl font-serif font-bold text-[#23293a] drop-shadow-lg">Case Studies</h2>
-          <a href="/blog" className="text-[#bfa77a] font-semibold text-base flex items-center gap-1 hover:underline">VIEW ALL CASES &rarr;</a>
+          <h2 className="text-3xl md:text-4xl font-serif font-bold text-black drop-shadow-lg">Case Studies</h2>
+          <a href="/blog" className="text-[#cfac33] font-semibold text-base flex items-center gap-1 hover:underline">VIEW ALL CASES &rarr;</a>
         </div>
         <div className="flex gap-6 justify-center mb-8 flex-wrap">
           {visible.map((c, i) => <CaseCard key={i} {...c} />)}
         </div>
         <div className="flex justify-center gap-4">
-          <button onClick={prev} className="w-12 h-12 rounded-full bg-white border-2 border-[#bfa77a] flex items-center justify-center text-[#bfa77a] text-xl font-bold shadow hover:bg-[#e5e2dc] transition-all">&#60;</button>
-          <button onClick={next} className="w-12 h-12 rounded-full bg-white border-2 border-[#bfa77a] flex items-center justify-center text-[#bfa77a] text-xl font-bold shadow hover:bg-[#e5e2dc] transition-all">&#62;</button>
+          <button onClick={prev} className="w-12 h-12 rounded-full bg-white border-2 border-[#cfac33] flex items-center justify-center text-[#cfac33] text-xl font-bold shadow hover:bg-[#fff2c5] transition-all">&#60;</button>
+          <button onClick={next} className="w-12 h-12 rounded-full bg-white border-2 border-[#cfac33] flex items-center justify-center text-[#cfac33] text-xl font-bold shadow hover:bg-[#fff2c5] transition-all">&#62;</button>
         </div>
       </div>
     </section>

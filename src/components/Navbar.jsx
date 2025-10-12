@@ -25,7 +25,7 @@ function Navbar() {
             }
             setOpen(false);
           }}>About us</a>
-        <Link to="/admin/login" className="bg-[#bfa77a] text-white px-4 py-1 rounded font-semibold ml-2">Admin</Link>
+        <Link to="/admin/login" className="bg-[#cfac33] text-white px-4 py-1 rounded font-semibold ml-2">Admin</Link>
       </div>
       <button className="md:hidden" onClick={() => setOpen(!open)} aria-label="Open menu">
         <span className={`block w-6 h-0.5 bg-[#7c6a4c] mb-1 transition-all ${open ? 'rotate-45 translate-y-2' : ''}`}></span>
@@ -50,7 +50,7 @@ function Navbar() {
                 }
                 setOpen(false);
               }}>About us</a>
-            <Link to="/admin/login" className="bg-[#bfa77a] text-white px-4 py-1 rounded font-semibold" onClick={() => setOpen(false)}>Admin</Link>
+            <Link to="/admin/login" className="bg-[#cfac33] text-white px-4 py-1 rounded font-semibold" onClick={() => setOpen(false)}>Admin</Link>
           </div>
         </div>
       )}
