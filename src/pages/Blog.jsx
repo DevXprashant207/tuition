@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import BlogCard from '../components/BlogCard';
 
 const API_BASE = 'https://law-firm-backend-e082.onrender.com/api/posts';
@@ -7,7 +8,7 @@ function Blog() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [popupPost, setPopupPost] = useState(null); // selected post for popup
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch(API_BASE)
@@ -37,31 +38,10 @@ function Blog() {
           {posts.map(post => (
             <BlogCard 
               key={post.id} 
-              post={post} 
-              onReadMore={() => setPopupPost(post)} 
+              post={post}
+              onReadMore={() => navigate(`/blog/${post.slug}`)} // 👈 Redirect instead of popup
             />
           ))}
-        </div>
-      )}
-
-      {/* Popup modal */}
-      {popupPost && (
-        <div className="fixed inset-0 bg-black/50 flex justify-center items-start pt-20 z-50">
-          <div className="bg-white rounded-xl shadow-lg w-full max-w-3xl p-6 relative">
-            <button
-              className="absolute top-4 right-4 text-gray-500 hover:text-gray-800"
-              onClick={() => setPopupPost(null)}
-            >
-              ✕
-            </button>
-
-            <h1 className="text-2xl font-bold text-[#23293a] mb-2">{popupPost.title}</h1>
-            <h2 className="text-lg font-semibold text-[#7c6a4c] mb-4">{popupPost.slug}</h2>
-            <p className="text-xs text-gray-500 mb-4">
-              {new Date(popupPost.createdAt).toLocaleDateString('en-US', { year:'numeric', month:'short', day:'numeric' })}
-            </p>
-            <p className="text-gray-700">{popupPost.content}</p>
-          </div>
         </div>
       )}
     </div>

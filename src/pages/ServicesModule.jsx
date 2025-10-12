@@ -8,34 +8,61 @@ function ServiceForm({ onSubmit, initialData, onCancel }) {
     name: '',
     description: '',
     slug: '',
-    imageUrl: ''
+    image: null,
+    imagePreview: ''
   });
 
+  const [error, setError] = useState('');
+
   useEffect(() => {
-    if (initialData) setForm(initialData);
+    if (initialData) {
+      setForm({
+        ...initialData,
+        imagePreview: initialData.imageUrl || ''
+      });
+    }
   }, [initialData]);
 
-  const handleChange = e => {
+  const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = e => {
-    e.preventDefault();
-    const payload = {
-      name: form.name,
-      slug: form.slug,
-      description: form.description,
-      imageUrl: form.imageUrl
-    };
-    onSubmit(payload);
+  const handleImageUpload = (file) => {
+    if (file) {
+      setForm({
+        ...form,
+        image: file,
+        imagePreview: URL.createObjectURL(file)
+      });
+    }
   };
 
-  const handleImageUpload = (imageUrl) => {
-    setForm({ ...form, imageUrl });
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!form.name || !form.slug || !form.description) {
+      setError('All fields are required.');
+      return;
+    }
+
+    setError('');
+
+    const formData = new FormData();
+    formData.append('name', form.name);
+    formData.append('slug', form.slug);
+    formData.append('description', form.description);
+
+    if (form.image instanceof File) {
+      formData.append('image', form.image);
+    }
+
+    onSubmit(formData);
   };
 
   return (
     <form className="space-y-4" onSubmit={handleSubmit}>
+      {error && <div className="text-red-600 text-sm">{error}</div>}
+
       <input
         name="name"
         value={form.name}
@@ -44,6 +71,7 @@ function ServiceForm({ onSubmit, initialData, onCancel }) {
         className="w-full border p-2 rounded"
         required
       />
+
       <input
         name="slug"
         value={form.slug}
@@ -52,6 +80,7 @@ function ServiceForm({ onSubmit, initialData, onCancel }) {
         className="w-full border p-2 rounded"
         required
       />
+
       <textarea
         name="description"
         value={form.description}
@@ -60,23 +89,22 @@ function ServiceForm({ onSubmit, initialData, onCancel }) {
         className="w-full border p-2 rounded h-32 resize-none overflow-y-auto"
         required
       />
+
       <div>
         <ImageUploader onUpload={handleImageUpload} />
-        {form.imageUrl && (
+        {form.imagePreview && (
           <div className="mt-2">
             <img
-              src={form.imageUrl}
+              src={form.imagePreview}
               alt="Uploaded"
               className="w-20 h-20 object-cover rounded-full border mx-auto"
             />
           </div>
         )}
       </div>
+
       <div className="flex gap-2">
-        <button
-          type="submit"
-          className="bg-[#bfa77a] text-white px-4 py-2 rounded"
-        >
+        <button type="submit" className="bg-[#bfa77a] text-white px-4 py-2 rounded">
           {initialData ? 'Update' : 'Create'}
         </button>
         {onCancel && (
@@ -106,13 +134,10 @@ function ServicesModule() {
     try {
       const res = await fetch(`${API_BASE}/api/services`);
       const data = await res.json();
-      if (data.success && Array.isArray(data.data)) {
-        setServices(data.data);
-      } else {
-        setServices([]);
-      }
+      if (data.success && Array.isArray(data.data)) setServices(data.data);
+      else setServices([]);
     } catch (err) {
-      console.error('Fetch services error:', err);
+      console.error(err);
       setServices([]);
     }
     setLoading(false);
@@ -122,47 +147,37 @@ function ServicesModule() {
     fetchServices();
   }, []);
 
-  const handleCreate = async (payload) => {
+  const handleCreate = async (formData) => {
     try {
       const res = await fetch(`${API_BASE}/api/admin/services`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(payload)
+        headers: { Authorization: `Bearer ${token}` },
+        body: formData
       });
       const data = await res.json();
       if (data.success) {
         setShowForm(false);
         fetchServices();
-      } else {
-        alert(data.message || 'Failed to create service');
-      }
+      } else alert(data.message || 'Failed to create service');
     } catch (err) {
       console.error('Create service error:', err);
     }
   };
 
-  const handleUpdate = async (payload) => {
+  const handleUpdate = async (formData) => {
     if (!editing || !editing.id) return;
     try {
       const res = await fetch(`${API_BASE}/api/admin/services/${editing.id}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(payload)
+        headers: { Authorization: `Bearer ${token}` },
+        body: formData
       });
       const data = await res.json();
       if (data.success) {
         setEditing(null);
         setShowForm(false);
         fetchServices();
-      } else {
-        alert(data.message || 'Failed to update service');
-      }
+      } else alert(data.message || 'Failed to update service');
     } catch (err) {
       console.error('Update service error:', err);
     }
@@ -174,16 +189,11 @@ function ServicesModule() {
     try {
       const res = await fetch(`${API_BASE}/api/admin/services/${id}`, {
         method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
+        headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
-      if (data.success) {
-        fetchServices();
-      } else {
-        alert(data.message || 'Failed to delete service');
-      }
+      if (data.success) fetchServices();
+      else alert(data.message || 'Failed to delete service');
     } catch (err) {
       console.error('Delete service error:', err);
     }
@@ -208,7 +218,7 @@ function ServicesModule() {
           </h3>
           <ServiceForm
             onSubmit={editing ? handleUpdate : handleCreate}
-            initialData={editing ? editing : undefined}
+            initialData={editing}
             onCancel={() => { setShowForm(false); setEditing(null); }}
           />
         </div>
@@ -223,7 +233,7 @@ function ServicesModule() {
               <th className="p-2 border">Service Name</th>
               <th className="p-2 border">Slug</th>
               <th className="p-2 border">Description</th>
-              {/* <th className="p-2 border">Image</th> */}
+              <th className="p-2 border">Image</th>
               <th className="p-2 border">Actions</th>
             </tr>
           </thead>
@@ -232,19 +242,19 @@ function ServicesModule() {
               <tr key={item.id} className="text-center">
                 <td className="p-2 border">{item.name}</td>
                 <td className="p-2 border">{item.slug}</td>
-                <td className="p-2 border max-w-xs">
+                <td className="p-2 border">
                   <div
                     className="max-h-24 overflow-y-auto text-sm text-gray-700 px-2"
-                    style={{ lineHeight: '1.5', scrollbarWidth: 'thin' }}
+                    style={{ lineHeight: '1.5' }}
                   >
                     {item.description}
                   </div>
                 </td>
-                {/* <td className="p-2 border">
+                <td className="p-2 border">
                   {item.imageUrl
-                    ? <img src={item.imageUrl} alt="" className="w-12 h-12 object-cover rounded-full mx-auto" />
+                    ? <img src={`${API_BASE}${item.imageUrl}`} alt="" className="w-12 h-12 object-cover rounded-full mx-auto" />
                     : 'N/A'}
-                </td> */}
+                </td>
                 <td className="p-2 border">
                   <button
                     className="bg-blue-500 text-white px-2 py-1 rounded mr-2"
@@ -261,6 +271,13 @@ function ServicesModule() {
                 </td>
               </tr>
             ))}
+            {services.length === 0 && (
+              <tr>
+                <td colSpan="5" className="text-center p-4 text-[#bfa77a]">
+                  No services found.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       )}

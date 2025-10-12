@@ -2,14 +2,31 @@ import React, { useEffect, useState } from 'react';
 import ImageUploader from '../components/ImageUploader';
 
 const API_BASE = 'https://law-firm-backend-e082.onrender.com';
+// Predefined list of services
+const SERVICE_OPTIONS = [
+  { id: 'law1', name: 'Criminal Law' },
+  { id: 'law2', name: 'Family Law' },
+  { id: 'law3', name: 'Corporate Law' },
+  { id: 'law4', name: 'Intellectual Property' },
+  { id: 'law5', name: 'Civil Litigation' },
+  { id: 'law6', name: 'Employment Law' },
+  { id: 'law7', name: 'Real Estate Law' },
+  { id: 'law8', name: 'Tax Law' },
+  { id: 'law9', name: 'Immigration Law' },
+  { id: 'law10', name: 'Constitutional Law' },
+];
+  
 
 function LawyerForm({ onSubmit, initialData, onCancel }) {
   const [form, setForm] = useState(initialData || {
     name: '',
     specialization: '',
-    experience: '',
-    image: '',
+    experience: '', // Now stores selected service
+    image: null,
+    imagePreview: '',
   });
+
+  const [error, setError] = useState('');
 
   const handleChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -18,23 +35,45 @@ function LawyerForm({ onSubmit, initialData, onCancel }) {
   const handleSubmit = e => {
     e.preventDefault();
 
-    // Map frontend fields to backend fields
-    const payload = {
-      name: form.name,
-      title: form.specialization,
-      bio: form.experience,
-      imageUrl: form.image
-    };
+    if (!form.name || !form.specialization || !form.experience) {
+      setError('All fields are required.');
+      return;
+    }
 
-    onSubmit(payload);
+    if (!form.image && !initialData) {
+      setError('Please upload an image.');
+      return;
+    }
+
+    setError('');
+
+    const formData = new FormData();
+    formData.append('name', form.name);
+    formData.append('title', form.specialization);
+    formData.append('bio', form.experience); // service selected
+
+    if (form.image instanceof File) {
+      formData.append('image', form.image);
+    }
+
+    onSubmit(formData);
   };
 
-  const handleImageUpload = (imageUrl) => {
-    setForm({ ...form, image: imageUrl });
+  const handleImageUpload = (file) => {
+    if (file) {
+      setForm({
+        ...form,
+        image: file,
+        imagePreview: URL.createObjectURL(file)
+      });
+    }
   };
 
   return (
     <form className="space-y-4" onSubmit={handleSubmit}>
+      {error && <div className="text-red-600 text-sm">{error}</div>}
+
+      {/* Lawyer Name */}
       <input
         name="name"
         value={form.name}
@@ -43,6 +82,8 @@ function LawyerForm({ onSubmit, initialData, onCancel }) {
         className="w-full border p-2 rounded"
         required
       />
+
+      {/* Title */}
       <input
         name="specialization"
         value={form.specialization}
@@ -51,26 +92,38 @@ function LawyerForm({ onSubmit, initialData, onCancel }) {
         className="w-full border p-2 rounded"
         required
       />
-      <input
+
+      {/* Service Dropdown (replacing manual input) */}
+      <select
         name="experience"
         value={form.experience}
         onChange={handleChange}
-        placeholder="Service Description"
         className="w-full border p-2 rounded"
         required
-      />
+      >
+        <option value="">Select Service</option>
+        {SERVICE_OPTIONS.map(service => (
+          <option key={service.id} value={service.name}>
+            {service.name}
+          </option>
+        ))}
+      </select>
+
+      {/* Image Upload */}
       <div>
         <ImageUploader onUpload={handleImageUpload} />
-        {form.image && (
+        {(form.imagePreview || form.imageUrl) && (
           <div className="mt-2">
             <img
-              src={form.image}
+              src={form.imagePreview || `${API_BASE}${form.imageUrl}`}
               alt="Uploaded"
               className="w-20 h-20 object-cover rounded-full border mx-auto"
             />
           </div>
         )}
       </div>
+
+      {/* Buttons */}
       <div className="flex gap-2">
         <button
           type="submit"
@@ -92,26 +145,23 @@ function LawyerForm({ onSubmit, initialData, onCancel }) {
   );
 }
 
+
 function LawyersModule() {
   const [lawyers, setLawyers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [editing, setEditing] = useState(null);
   const [showForm, setShowForm] = useState(false);
 
-  const token = localStorage.getItem('token'); // admin token
+  const token = localStorage.getItem('token');
 
   const fetchLawyers = async () => {
     setLoading(true);
     try {
       const res = await fetch(`${API_BASE}/api/lawyers`);
       const data = await res.json();
-      if (Array.isArray(data.data)) {
-        setLawyers(data.data);
-      } else if (Array.isArray(data)) {
-        setLawyers(data);
-      } else {
-        setLawyers([]);
-      }
+      if (Array.isArray(data.data)) setLawyers(data.data);
+      else if (Array.isArray(data)) setLawyers(data);
+      else setLawyers([]);
     } catch (err) {
       console.error(err);
       setLawyers([]);
@@ -123,16 +173,18 @@ function LawyersModule() {
     fetchLawyers();
   }, []);
 
-  const handleCreate = async (payload) => {
+  const handleCreate = async (formData) => {
     try {
-      await fetch(`${API_BASE}/api/admin/lawyers`, {
+      const res = await fetch(`${API_BASE}/api/admin/lawyers`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(payload)
+        body: formData,
       });
+
+      if (!res.ok) throw new Error('Failed to create lawyer');
+
       setShowForm(false);
       fetchLawyers();
     } catch (err) {
@@ -140,16 +192,18 @@ function LawyersModule() {
     }
   };
 
-  const handleUpdate = async (payload) => {
+  const handleUpdate = async (formData) => {
     try {
-      await fetch(`${API_BASE}/api/admin/lawyers/${editing.id}`, {
+      const res = await fetch(`${API_BASE}/api/admin/lawyers/${editing.id}`, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(payload)
+        body: formData,
       });
+
+      if (!res.ok) throw new Error('Failed to update lawyer');
+
       setEditing(null);
       setShowForm(false);
       fetchLawyers();
@@ -163,9 +217,7 @@ function LawyersModule() {
     try {
       await fetch(`${API_BASE}/api/admin/lawyers/${id}`, {
         method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
+        headers: { Authorization: `Bearer ${token}` },
       });
       fetchLawyers();
     } catch (err) {
@@ -213,13 +265,17 @@ function LawyersModule() {
           </thead>
           <tbody>
             {[...lawyers].reverse().map(lawyer => (
-              <tr key={lawyer.id} className="text-center">
+              <tr key={lawyer.id || lawyer._id} className="text-center">
                 <td className="p-2 border">{lawyer.name}</td>
                 <td className="p-2 border">{lawyer.title}</td>
                 <td className="p-2 border">{lawyer.bio}</td>
                 <td className="p-2 border">
                   {lawyer.imageUrl
-                    ? <img src={lawyer.imageUrl} alt="" className="w-12 h-12 object-cover rounded-full mx-auto" />
+                    ? <img
+                        src={`${API_BASE}${lawyer.imageUrl}`}
+                        alt=""
+                        className="w-12 h-12 object-cover rounded-full mx-auto"
+                      />
                     : 'N/A'}
                 </td>
                 <td className="p-2 border">
@@ -231,7 +287,7 @@ function LawyersModule() {
                   </button>
                   <button
                     className="bg-red-500 text-white px-2 py-1 rounded"
-                    onClick={() => handleDelete(lawyer.id)}
+                    onClick={() => handleDelete(lawyer.id || lawyer._id)}
                   >
                     Delete
                   </button>

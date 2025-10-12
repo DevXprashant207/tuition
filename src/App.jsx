@@ -11,9 +11,10 @@ import HomeTestimonials from './components/HomeTestimonials';
 import HomeCaseStudies from './components/HomeCaseStudies';
 import ConsultationForm from './components/ConsultationForm';
 import Services from './pages/Services';
-import ServiceDetail from './pages/ServiceDetail';
+import ServiceDetails from './pages/ServiceDetail';
 import Lawyers from './pages/Lawyers';
 import Blog from './pages/Blog';
+import BlogDetail from './pages/BlogDetail';
 import Contact from './pages/Contact';
 import AdminLogin from './pages/AdminLogin';
 import News from './pages/News';
@@ -42,9 +43,10 @@ function App() {
             } />
             <Route path="/consultation" element={<ConsultationForm />} />
             <Route path="/services" element={<Services />} />
-            <Route path="/services/:id" element={<ServiceDetail />} />
+            <Route path="/services/:id" element={<ServiceDetails />} />
             <Route path="/lawyers" element={<Lawyers />} />
             <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/:slug" element={<BlogDetail />} />
             <Route path="/news" element={<News />} />
             <Route path="/news/:id" element={<NewsDetail />} />
             <Route path="/contact" element={<Contact />} />

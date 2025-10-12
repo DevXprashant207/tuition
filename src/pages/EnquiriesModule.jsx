@@ -1,18 +1,28 @@
 import React, { useEffect, useState } from 'react';
-import { ChevronDown } from 'lucide-react'; // for dropdown icon
+import { ChevronDown } from 'lucide-react';
 
-const API_BASE = 'https://law-firm-backend-e082.onrender.com'; // your backend URL
+const API_BASE = 'https://law-firm-backend-e082.onrender.com';
 
+// Map frontend dropdown values to backend status values
+const STATUS_MAP = {
+  'New': 'pending',
+  'Complete': 'complete',
+  'Not Interested': 'not_interested',
+  'Irrelevant': 'irrelevant'
+};
+
+// Enquiry form component
 function EnquiryForm({ onSubmit, initialData, onCancel }) {
   const [form, setForm] = useState(initialData || {
-    name: '',
+    firstName: '',
+    lastName: '',
     email: '',
+    phone: '',
     message: '',
+    lawId: ''
   });
 
-  const handleChange = e => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -21,30 +31,12 @@ function EnquiryForm({ onSubmit, initialData, onCancel }) {
 
   return (
     <form className="space-y-4" onSubmit={handleSubmit}>
-      <input
-        name="name"
-        value={form.name}
-        onChange={handleChange}
-        placeholder="Name"
-        className="w-full border p-2 rounded"
-        required
-      />
-      <input
-        name="email"
-        value={form.email}
-        onChange={handleChange}
-        placeholder="Email"
-        className="w-full border p-2 rounded"
-        required
-      />
-      <textarea
-        name="message"
-        value={form.message}
-        onChange={handleChange}
-        placeholder="Message"
-        className="w-full border p-2 rounded"
-        required
-      />
+      <input name="firstName" value={form.firstName} onChange={handleChange} placeholder="First Name" className="w-full border p-2 rounded" required />
+      <input name="lastName" value={form.lastName} onChange={handleChange} placeholder="Last Name" className="w-full border p-2 rounded" required />
+      <input name="email" value={form.email} onChange={handleChange} placeholder="Email" className="w-full border p-2 rounded" required />
+      <input name="phone" value={form.phone} onChange={handleChange} placeholder="Phone" className="w-full border p-2 rounded" required />
+      <input name="lawId" value={form.lawId} onChange={handleChange} placeholder="Law ID" className="w-full border p-2 rounded" required />
+      <textarea name="message" value={form.message} onChange={handleChange} placeholder="Message" className="w-full border p-2 rounded" required />
       <div className="flex gap-2">
         <button type="submit" className="bg-[#bfa77a] text-white px-4 py-2 rounded">
           {initialData ? 'Update' : 'Create'}
@@ -59,28 +51,23 @@ function EnquiryForm({ onSubmit, initialData, onCancel }) {
   );
 }
 
-// ✅ Updated Dropdown menu component
+// Actions dropdown + Delete button
 function EnquiryActions({ enquiry, handleDelete, handleStatusUpdate }) {
   const [open, setOpen] = useState(false);
-  const [selectedStatus, setSelectedStatus] = useState('New');
+  const [selectedStatus, setSelectedStatus] = useState(
+    Object.keys(STATUS_MAP).find(key => STATUS_MAP[key] === enquiry.status) || 'New'
+  );
 
-  const statuses = [
-    'New',
-    'Complete',
-    'Not Interested',
-    'Irrelevant',
-    'Out of Service Area',
-  ];
+  const statuses = Object.keys(STATUS_MAP);
 
-  const handleSelect = async (status) => {
-    setSelectedStatus(status);
+  const handleSelect = async (statusLabel) => {
+    setSelectedStatus(statusLabel);
     setOpen(false);
-    await handleStatusUpdate(enquiry.id, status);
+    await handleStatusUpdate(enquiry.id, statusLabel);
   };
 
   return (
     <div className="flex justify-center items-center gap-2">
-      {/* Dropdown Button */}
       <div className="relative inline-block text-left">
         <button
           onClick={() => setOpen(!open)}
@@ -92,7 +79,7 @@ function EnquiryActions({ enquiry, handleDelete, handleStatusUpdate }) {
 
         {open && (
           <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
-            {statuses.map((status) => (
+            {statuses.map(status => (
               <button
                 key={status}
                 onClick={() => handleSelect(status)}
@@ -105,7 +92,6 @@ function EnquiryActions({ enquiry, handleDelete, handleStatusUpdate }) {
         )}
       </div>
 
-      {/* Delete Button */}
       <button
         onClick={() => handleDelete(enquiry.id)}
         className="bg-red-500 text-white px-3 py-1.5 rounded hover:bg-red-600"
@@ -116,6 +102,7 @@ function EnquiryActions({ enquiry, handleDelete, handleStatusUpdate }) {
   );
 }
 
+// Main module
 function EnquiriesModule() {
   const [enquiries, setEnquiries] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -128,7 +115,7 @@ function EnquiriesModule() {
     setLoading(true);
     try {
       const res = await fetch(`${API_BASE}/api/admin/enquiries`, {
-        headers: { 'Authorization': `Bearer ${token}` },
+        headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await res.json();
       if (data.success) setEnquiries(data.data);
@@ -146,31 +133,29 @@ function EnquiriesModule() {
     try {
       await fetch(`${API_BASE}/api/admin/enquiries`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify(enquiry),
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify(enquiry)
       });
       setShowForm(false);
       fetchEnquiries();
-    } catch (err) { console.error('Failed to create enquiry:', err); }
+    } catch (err) {
+      console.error('Failed to create enquiry:', err);
+    }
   };
 
   const handleUpdate = async (enquiry) => {
     try {
       await fetch(`${API_BASE}/api/admin/enquiries/${editing.id}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify(enquiry),
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify(enquiry)
       });
       setEditing(null);
       setShowForm(false);
       fetchEnquiries();
-    } catch (err) { console.error('Failed to update enquiry:', err); }
+    } catch (err) {
+      console.error('Failed to update enquiry:', err);
+    }
   };
 
   const handleDelete = async (id) => {
@@ -178,31 +163,39 @@ function EnquiriesModule() {
     try {
       await fetch(`${API_BASE}/api/admin/enquiries/${id}`, {
         method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` },
+        headers: { 'Authorization': `Bearer ${token}` }
       });
       fetchEnquiries();
-    } catch (err) { console.error('Failed to delete enquiry:', err); }
+    } catch (err) {
+      console.error('Failed to delete enquiry:', err);
+    }
   };
 
-  const handleStatusUpdate = async (id, status) => {
+  const handleStatusUpdate = async (id, statusLabel) => {
     try {
-      await fetch(`${API_BASE}/api/admin/enquiries/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify({ status }),
+      const status = STATUS_MAP[statusLabel];
+      if (!status) {
+        alert('Invalid status selected');
+        return;
+      }
+
+      const res = await fetch(`${API_BASE}/api/admin/enquiries/${id}/status`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ status })
       });
+
+      const data = await res.json();
+      if (!data.success) throw new Error(data.message || 'Failed to update status');
       fetchEnquiries();
-    } catch (err) { console.error('Failed to update status:', err); }
+    } catch (err) {
+      console.error('Failed to update status:', err);
+      alert('Failed to update status: ' + err.message);
+    }
   };
 
   return (
     <div className="p-6">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-bold text-[#23293a]">Enquiries</h2>
-      </div>
 
       {showForm && (
         <div className="mb-8 bg-[#f8f6f2] p-6 rounded-lg shadow">
@@ -228,7 +221,7 @@ function EnquiriesModule() {
               <th className="p-2 border">Phone No</th>
               <th className="p-2 border">Law</th>
               <th className="p-2 border">Message</th>
-              <th className="p-2 border">Actions</th>
+              <th className="p-2 border">Status / Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -239,11 +232,11 @@ function EnquiriesModule() {
                 <td className="p-2 border">{enquiry.phone}</td>
                 <td className="p-2 border">{enquiry.lawId}</td>
                 <td className="p-2 border">{enquiry.message}</td>
-                <td className="p-2 border text-center">
-                  <EnquiryActions 
-                    enquiry={enquiry} 
-                    handleDelete={handleDelete} 
-                    handleStatusUpdate={handleStatusUpdate} 
+                <td className="p-2 border">
+                  <EnquiryActions
+                    enquiry={enquiry}
+                    handleDelete={handleDelete}
+                    handleStatusUpdate={handleStatusUpdate}
                   />
                 </td>
               </tr>

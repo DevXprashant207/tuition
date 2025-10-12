@@ -53,9 +53,9 @@ function HomeCaseStudies() {
   <section className="relative py-10 px-2 md:px-8 bg-gradient-to-br from-[#f8f6f2] to-[#e5e2dc]">
       <div className="absolute left-0 top-0 w-full h-full flex flex-col items-center justify-center pointer-events-none select-none">
         <span className="text-[7vw] font-bold uppercase text-[#e5e2dc] opacity-20 mb-2" style={{letterSpacing: '0.1em'}}>CASE STUDIES</span>
-        <span className="text-lg md:text-2xl font-serif text-[#bfa77a] opacity-30 max-w-2xl text-center px-2">
+        {/* <span className="text-lg md:text-2xl font-serif text-[#bfa77a] opacity-30 max-w-2xl text-center px-2">
           Real results for real clients. Explore our proven track record in family, corporate, real estate, criminal, and insurance law. Each case study highlights our commitment to excellence and justice.
-        </span>
+        </span> */}
       </div>
       <div className="relative z-10 max-w-6xl mx-auto">
         <div className="flex items-center justify-between mb-8">

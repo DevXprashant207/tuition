@@ -13,12 +13,12 @@ function AdminEnquiries() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  // ✅ Fetch enquiries with token
+  const token = localStorage.getItem('token');
+
+  // ✅ Fetch enquiries
   const fetchEnquiries = async () => {
     setLoading(true);
     try {
-      const token = localStorage.getItem('token');
-      console.log(token);
       const res = await fetch(API_BASE, {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -26,17 +26,12 @@ function AdminEnquiries() {
         },
       });
 
-      if (res.status === 401) {
-        throw new Error('Unauthorized: Invalid or missing token.');
-      }
+      if (res.status === 401) throw new Error('Unauthorized: Invalid or missing token.');
 
       const data = await res.json();
 
-      if (data.success && Array.isArray(data.data)) {
-        setEnquiries(data.data);
-      } else {
-        setEnquiries([]);
-      }
+      if (data.success && Array.isArray(data.data)) setEnquiries(data.data);
+      else setEnquiries([]);
 
     } catch (err) {
       setError(err.message || 'Failed to fetch enquiries.');
@@ -48,30 +43,41 @@ function AdminEnquiries() {
     fetchEnquiries();
   }, []);
 
-  // ✅ Handle actions like delete, mark complete, etc.
+  // ✅ Handle actions: Delete or Update Status
   const handleAction = async (id, action) => {
-    const token = localStorage.getItem('token');
-
     if (action === 'delete') {
       if (!window.confirm('Are you sure you want to delete this enquiry?')) return;
 
       try {
         const res = await fetch(`${API_BASE}/${id}`, {
           method: 'DELETE',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
+          headers: { 'Authorization': `Bearer ${token}` },
         });
-
         if (!res.ok) throw new Error('Failed to delete enquiry.');
-
         setEnquiries(enquiries.filter(e => e.id !== id));
       } catch (err) {
         alert(err.message);
       }
     } else {
-      // Simulate status change (not persisted)
-      setEnquiries(enquiries.filter(e => e.id !== id));
+      // ✅ Update status via PATCH API
+      try {
+        const res = await fetch(`${API_BASE}/${id}/status`, {
+          method: 'PATCH',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ status: action })
+        });
+
+        const data = await res.json();
+        if (!data.success) throw new Error(data.message || 'Failed to update status.');
+
+        // Update UI with new status
+        setEnquiries(enquiries.map(e => e.id === id ? { ...e, status: action } : e));
+      } catch (err) {
+        alert(err.message);
+      }
     }
   };
 
@@ -102,6 +108,9 @@ function AdminEnquiries() {
                 <div className="mb-2 text-[#7c6a4c]">
                   Message: {enquiry.message}
                 </div>
+                <div className="mb-2 text-sm text-gray-500">
+                  Status: <span className="font-semibold">{enquiry.status}</span>
+                </div>
 
                 <div className="flex gap-3 mt-4 flex-wrap">
                   {ACTIONS.map(action => (
@@ -111,6 +120,8 @@ function AdminEnquiries() {
                       className={`px-4 py-2 rounded font-semibold text-sm shadow transition-all ${
                         action.value === 'delete'
                           ? 'bg-red-500 text-white hover:bg-red-700'
+                          : enquiry.status === action.value
+                          ? 'bg-green-500 text-white'
                           : 'bg-[#bfa77a] text-white hover:bg-[#a08a5c]'
                       }`}
                     >

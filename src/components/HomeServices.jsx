@@ -30,7 +30,7 @@ function Services() {
 
   return (
     <div className="max-w-6xl mx-auto py-16 px-4">
-      <h2 className="text-3xl font-bold text-[#7c6a4c] mb-12 text-center">Our Services</h2>
+      <h2 className="text-5xl font-bold text-[#353333] mb-12 text-center">Our Services</h2>
 
       {services.length === 0 ? (
         <div className="text-center text-gray-500">No services found.</div>

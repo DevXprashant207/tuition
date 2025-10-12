@@ -25,12 +25,10 @@ function ConsultationForm() {
   });
   const [errors, setErrors] = useState({});
   const [thankYou, setThankYou] = useState(false);
-  const handleChange = e => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-  const handleAreaChange = e => {
-    setForm({ ...form, lawId: e.target.value });
-  };
+
+  const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
+  const handleAreaChange = e => setForm({ ...form, lawId: e.target.value });
+
   const validate = () => {
     const newErrors = {};
     if (!form.firstName) newErrors.firstName = 'The field is required.';
@@ -40,13 +38,14 @@ function ConsultationForm() {
     if (!form.message) newErrors.message = 'The field is required.';
     return newErrors;
   };
+
   const handleSubmit = async e => {
     e.preventDefault();
     const newErrors = validate();
     setErrors(newErrors);
     if (Object.keys(newErrors).length === 0) {
       try {
-        await fetch('http://localhost:3000/api/enquiry/', {
+        await fetch('https://law-firm-backend-e082.onrender.com/api/enquiry/', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(form)
@@ -60,13 +59,18 @@ function ConsultationForm() {
       }
     }
   };
+
   return (
-    <section id="consultation-section" className="bg-[#f8f6f2] py-16 px-4 md:px-10">
+    <section id="consultation" className="bg-[#f8f6f2] py-16 px-4 md:px-10">
       <div className="max-w-2xl mx-auto">
         <h2 className="text-2xl md:text-4xl font-bold text-[#23293a] mb-2 text-left tracking-widest uppercase">Contact Us</h2>
-        <h3 className="text-base md:text-lg font-serif font-bold text-[#7c6a4c] mb-6 text-left leading-tight">Law is a complex matter that can lead to significant problems if disregarded. Allow us to assist you!</h3>
+        <h3 className="text-base md:text-lg font-serif font-bold text-[#7c6a4c] mb-6 text-left leading-tight">
+          Law is a complex matter that can lead to significant problems if disregarded. Allow us to assist you!
+        </h3>
         {thankYou ? (
-          <div className="bg-white rounded-xl shadow p-8 text-center text-[#7c6a4c] text-xl font-semibold">Thank you for your enquiry! We will get back to you soon.</div>
+          <div className="bg-white rounded-xl shadow p-8 text-center text-[#7c6a4c] text-xl font-semibold">
+            Thank you for your enquiry! We will get back to you soon.
+          </div>
         ) : (
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -96,7 +100,9 @@ function ConsultationForm() {
               <textarea name="message" value={form.message} onChange={handleChange} placeholder="Message*" rows={4} className="w-full p-3 rounded bg-white border border-[#e5e2dc] focus:outline-none" />
               {errors.message && <div className="text-xs text-[#bfa77a] mt-1">{errors.message}</div>}
             </div>
-            <button type="submit" className="w-full bg-[#bfa77a] text-white py-4 rounded font-bold text-lg tracking-wide shadow hover:bg-[#a08a5c] transition-all">SUBMIT NOW</button>
+            <button type="submit" className="w-full bg-[#bfa77a] text-white py-4 rounded font-bold text-lg tracking-wide shadow hover:bg-[#a08a5c] transition-all">
+              SUBMIT NOW
+            </button>
           </form>
         )}
       </div>

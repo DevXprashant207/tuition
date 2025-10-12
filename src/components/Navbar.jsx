@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import logo from '../assets/logo.jpg';
+import logo from '../assets/Gupta_law_office.png';
 function Navbar() {
   const [open, setOpen] = useState(false);
 
@@ -8,9 +8,9 @@ function Navbar() {
     <nav className="bg-[#f8f6f2] border-b border-[#e5e2dc] px-6 py-3 flex items-center justify-between">
       <div className="flex items-center gap-2">
         <img src={logo} alt="Logo" className="h-8 w-8" />
-  <span className="font-bold text-lg tracking-wide text-[#7c6a4c]">Gupta Law Firm</span>
+  <span className="font-bold text-lg tracking-wide text-[#000000]">Gupta Law Offices</span>
       </div>
-      <div className="hidden md:flex gap-8 text-[#7c6a4c] font-medium">
+      <div className="hidden md:flex gap-8 text-[#000000] font-medium">
         <Link to="/">Home</Link>
         <Link to="/services">Services</Link>
         <Link to="/lawyers">Lawyers</Link>
