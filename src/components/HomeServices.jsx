@@ -12,8 +12,12 @@ function Services() {
     fetch(`${API_BASE}/api/services`)
       .then((res) => res.json())
       .then((data) => {
-        if (data.success) setServices(data.data.slice(0, 6)); // 👈 only take first 6
-        else setError('Failed to fetch services');
+        if (data.success) {
+          // only take first 6 for homepage
+          setServices(data.data.slice(0, 6));
+        } else {
+          setError('Failed to fetch services');
+        }
       })
       .catch(() => setError('Failed to fetch services'))
       .finally(() => setLoading(false));
@@ -35,6 +39,7 @@ function Services() {
               key={service._id || service.id}
               name={service.name}
               slug={service.slug}
+              imageUrl={service.imageUrl ? `${API_BASE}${service.imageUrl}` : null} // pass full API image URL
             />
           ))}
         </div>

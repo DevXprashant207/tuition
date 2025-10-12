@@ -8,7 +8,7 @@ function NewsDetail() {
   const [error, setError] = useState('');
 
   useEffect(() => {
-  fetch(`http://localhost:3000/api/news/${id}`)
+  fetch(`https://law-firm-backend-e082.onrender.com/api/news/${id}`)
       .then(res => res.json())
       .then(data => {
         setNews(data);

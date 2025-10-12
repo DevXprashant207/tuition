@@ -1,27 +1,58 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ImageUploader from '../components/ImageUploader';
 
 const API_BASE = 'https://law-firm-backend-e082.onrender.com';
 
 function NewsForm({ onSubmit, initialData, onCancel }) {
-  const [form, setForm] = useState(initialData || {
+  const [form, setForm] = useState({
     title: '',
     link: '',
     description: '',
-    imageUrl: '',
+    image: null,
+    imagePreview: ''
   });
 
-  const handleChange = e => {
+  useEffect(() => {
+    if (initialData) {
+      setForm({
+        ...initialData,
+        imagePreview: initialData.imageUrl || ''
+      });
+    }
+  }, [initialData]);
+
+  const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = e => {
-    e.preventDefault();
-    onSubmit(form);
+  const handleImageUpload = (file) => {
+    if (file) {
+      setForm({
+        ...form,
+        image: file,
+        imagePreview: URL.createObjectURL(file)
+      });
+    }
   };
 
-  const handleImageUpload = (imageUrl) => {
-    setForm({ ...form, imageUrl });
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!form.title || !form.description) {
+      alert('Title and Description are required.');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('title', form.title);
+    formData.append('link', form.link || '');
+    formData.append('description', form.description);
+
+    if (form.image instanceof File) {
+      formData.append('image', form.image);
+    }
+
+    onSubmit(formData);
   };
 
   return (
@@ -46,33 +77,23 @@ function NewsForm({ onSubmit, initialData, onCancel }) {
         value={form.description}
         onChange={handleChange}
         placeholder="Description"
-        className="w-full border p-2 rounded"
+        className="w-full border p-2 rounded h-32 resize-none overflow-y-auto"
         required
       />
       <div>
         <ImageUploader onUpload={handleImageUpload} />
-        {form.imageUrl && (
+        {form.imagePreview && (
           <div className="mt-2">
             <img
-              src={form.imageUrl}
+              src={form.imagePreview}
               alt="Uploaded"
               className="w-20 h-20 object-cover rounded-full border mx-auto"
-            />
-            <input
-              name="imageUrl"
-              value={form.imageUrl}
-              onChange={handleChange}
-              className="w-full border p-2 rounded mt-2"
-              readOnly
             />
           </div>
         )}
       </div>
       <div className="flex gap-2">
-        <button
-          type="submit"
-          className="bg-[#bfa77a] text-white px-4 py-2 rounded"
-        >
+        <button type="submit" className="bg-[#cfac33] text-white px-4 py-2 rounded">
           {initialData ? 'Update' : 'Create'}
         </button>
         {onCancel && (
@@ -95,70 +116,61 @@ function NewsModule() {
   const [editing, setEditing] = useState(null);
   const [showForm, setShowForm] = useState(false);
 
-  const token = localStorage.getItem('token'); // admin token
+  const token = localStorage.getItem('token');
 
   const fetchNews = async () => {
-    setLoading(true);
-    try {
-      const res = await fetch(`${API_BASE}/api/news/`);
-      const data = await res.json();
-      if (Array.isArray(data)) {
-        setNewsList(data);
-      } else {
-        setNewsList([]);
-      }
-    } catch (err) {
-      console.error(err);
+  setLoading(true);
+  try {
+    const res = await fetch(`${API_BASE}/api/news/`);
+    const result = await res.json();
+    if (result.success && Array.isArray(result.data)) {
+      setNewsList(result.data);
+    } else {
       setNewsList([]);
     }
-    setLoading(false);
-  };
+  } catch (err) {
+    console.error(err);
+    setNewsList([]);
+  }
+  setLoading(false);
+};
+
 
   useEffect(() => {
     fetchNews();
   }, []);
 
-  const handleCreate = async (item) => {
+  const handleCreate = async (formData) => {
     try {
       const res = await fetch(`${API_BASE}/api/admin/news/`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(item)
+        headers: { Authorization: `Bearer ${token}` },
+        body: formData
       });
       const data = await res.json();
       if (!data.error) {
         setShowForm(false);
         fetchNews();
-      } else {
-        alert(data.error);
-      }
+      } else alert(data.error);
     } catch (err) {
       console.error('Create news error:', err);
     }
   };
 
-  const handleUpdate = async (item) => {
+  const handleUpdate = async (formData) => {
     if (!editing || !editing.id) return;
     try {
       const res = await fetch(`${API_BASE}/api/admin/news/${editing.id}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(item)
+        headers: { Authorization: `Bearer ${token}` },
+        body: formData
       });
       const data = await res.json();
       if (!data.error) {
         setEditing(null);
         setShowForm(false);
         fetchNews();
-      } else {
-        alert(data.error);
-      }
+      } else alert(data.error);
     } catch (err) {
       console.error('Update news error:', err);
     }
@@ -170,16 +182,11 @@ function NewsModule() {
     try {
       const res = await fetch(`${API_BASE}/api/admin/news/${id}`, {
         method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
+        headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
-      if (!data.error) {
-        fetchNews();
-      } else {
-        alert(data.error);
-      }
+      if (!data.error) fetchNews();
+      else alert(data.error);
     } catch (err) {
       console.error('Delete news error:', err);
     }
@@ -190,7 +197,7 @@ function NewsModule() {
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-bold text-[#23293a]">News</h2>
         <button
-          className="bg-[#bfa77a] text-white px-4 py-2 rounded"
+          className="bg-[#cfac33] text-white px-4 py-2 rounded"
           onClick={() => { setShowForm(true); setEditing(null); }}
         >
           Add News
@@ -233,7 +240,7 @@ function NewsModule() {
                 <td className="p-2 border">{item.description}</td>
                 <td className="p-2 border">
                   {item.imageUrl
-                    ? <img src={item.imageUrl} alt="" className="w-12 h-12 object-cover rounded-full mx-auto" />
+                    ? <img src={`${API_BASE}${item.imageUrl}`} alt="" className="w-12 h-12 object-cover rounded-full mx-auto" />
                     : 'N/A'}
                 </td>
                 <td className="p-2 border">
@@ -252,6 +259,13 @@ function NewsModule() {
                 </td>
               </tr>
             ))}
+            {newsList.length === 0 && (
+              <tr>
+                <td colSpan="5" className="text-center p-4 text-[#cfac33]">
+                  No news found.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       )}

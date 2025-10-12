@@ -8,24 +8,61 @@ function PostForm({ onSubmit, initialData, onCancel }) {
     title: '',
     slug: '',
     content: '',
-    imageUrl: '',
+    image: null,
+    imagePreview: initialData?.imageUrl || ''
   });
 
-  const handleChange = e => {
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (initialData) {
+      setForm({
+        ...initialData,
+        imagePreview: initialData.imageUrl || ''
+      });
+    }
+  }, [initialData]);
+
+  const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = e => {
-    e.preventDefault();
-    onSubmit(form);
+  const handleImageUpload = (file) => {
+    if (file) {
+      setForm({
+        ...form,
+        image: file,
+        imagePreview: URL.createObjectURL(file)
+      });
+    }
   };
 
-  const handleImageUpload = (imageUrl) => {
-    setForm({ ...form, imageUrl });
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!form.title || !form.slug || !form.content) {
+      setError('All fields are required.');
+      return;
+    }
+
+    setError('');
+
+    const formData = new FormData();
+    formData.append('title', form.title);
+    formData.append('slug', form.slug);
+    formData.append('content', form.content);
+
+    if (form.image instanceof File) {
+      formData.append('image', form.image);
+    }
+
+    onSubmit(formData);
   };
 
   return (
     <form className="space-y-4" onSubmit={handleSubmit}>
+      {error && <div className="text-red-600 text-sm">{error}</div>}
+
       <input
         name="title"
         value={form.title}
@@ -34,6 +71,7 @@ function PostForm({ onSubmit, initialData, onCancel }) {
         className="w-full border p-2 rounded"
         required
       />
+
       <input
         name="slug"
         value={form.slug}
@@ -42,38 +80,31 @@ function PostForm({ onSubmit, initialData, onCancel }) {
         className="w-full border p-2 rounded"
         required
       />
+
       <textarea
         name="content"
         value={form.content}
         onChange={handleChange}
         placeholder="Content"
-        className="w-full border p-2 rounded"
+        className="w-full border p-2 rounded h-32 resize-none overflow-y-auto"
         required
       />
+
       <div>
         <ImageUploader onUpload={handleImageUpload} />
-        {form.imageUrl && (
+        {form.imagePreview && (
           <div className="mt-2">
             <img
-              src={form.imageUrl}
+              src={form.imagePreview}
               alt="Uploaded"
               className="w-20 h-20 object-cover rounded-full border mx-auto"
-            />
-            <input
-              name="imageUrl"
-              value={form.imageUrl}
-              onChange={handleChange}
-              className="w-full border p-2 rounded mt-2"
-              readOnly
             />
           </div>
         )}
       </div>
+
       <div className="flex gap-2">
-        <button
-          type="submit"
-          className="bg-[#bfa77a] text-white px-4 py-2 rounded"
-        >
+        <button type="submit" className="bg-[#cfac33] text-white px-4 py-2 rounded">
           {initialData ? 'Update' : 'Create'}
         </button>
         {onCancel && (
@@ -103,9 +134,7 @@ function PostsModule() {
     try {
       const res = await fetch(`${API_BASE}/api/posts`);
       const data = await res.json();
-      if (Array.isArray(data)) {
-        setPosts(data);
-      } else if (Array.isArray(data.data)) {
+      if (data.success && Array.isArray(data.data)) {
         setPosts(data.data);
       } else {
         setPosts([]);
@@ -121,15 +150,14 @@ function PostsModule() {
     fetchPosts();
   }, []);
 
-  const handleCreate = async (item) => {
+  const handleCreate = async (formData) => {
     try {
       const res = await fetch(`${API_BASE}/api/admin/posts`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify(item)
+        body: formData
       });
       const data = await res.json();
       if (data.success) {
@@ -143,16 +171,15 @@ function PostsModule() {
     }
   };
 
-  const handleUpdate = async (item) => {
+  const handleUpdate = async (formData) => {
     if (!editing || !editing.id) return;
     try {
       const res = await fetch(`${API_BASE}/api/admin/posts/${editing.id}`, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify(item)
+        body: formData
       });
       const data = await res.json();
       if (data.success) {
@@ -193,7 +220,7 @@ function PostsModule() {
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-bold text-[#23293a]">Posts</h2>
         <button
-          className="bg-[#bfa77a] text-white px-4 py-2 rounded"
+          className="bg-[#cfac33] text-white px-4 py-2 rounded"
           onClick={() => { setShowForm(true); setEditing(null); }}
         >
           Add Post
@@ -222,6 +249,7 @@ function PostsModule() {
               <th className="p-2 border">Title</th>
               <th className="p-2 border">Slug</th>
               <th className="p-2 border">Content</th>
+              <th className="p-2 border">Image</th>
               <th className="p-2 border">Actions</th>
             </tr>
           </thead>
@@ -234,6 +262,11 @@ function PostsModule() {
                   <div className="max-h-12 overflow-y-auto text-left px-1">
                     {item.content}
                   </div>
+                </td>
+                <td className="p-2 border">
+                  {item.imageUrl
+                    ? <img src={`${API_BASE}${item.imageUrl}`} alt="" className="w-12 h-12 object-cover rounded-full mx-auto" />
+                    : 'N/A'}
                 </td>
                 <td className="p-2 border">
                   <button
@@ -251,6 +284,13 @@ function PostsModule() {
                 </td>
               </tr>
             ))}
+            {posts.length === 0 && (
+              <tr>
+                <td colSpan="5" className="text-center p-4 text-[#cfac33]">
+                  No posts found.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       )}

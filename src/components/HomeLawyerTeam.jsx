@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import LawyerCard from './LawyerCard';
 
 const API_BASE = 'https://law-firm-backend-e082.onrender.com';
+const PLACEHOLDER_IMAGE = '/default-lawyer.png'; // fallback image
 
 function HomeLawyerTeam() {
   const [lawyers, setLawyers] = useState([]);
   const [startIdx, setStartIdx] = useState(0);
 
+  // Fetch lawyers from API
   useEffect(() => {
     fetch(`${API_BASE}/api/lawyers`)
       .then((res) => res.json())
@@ -20,6 +22,7 @@ function HomeLawyerTeam() {
       .catch((err) => console.error('Failed to fetch lawyers:', err));
   }, []);
 
+  // Auto-scroll every 2.5s if more than 4 lawyers
   useEffect(() => {
     if (lawyers.length > 4) {
       const interval = setInterval(() => {
@@ -30,17 +33,16 @@ function HomeLawyerTeam() {
   }, [lawyers]);
 
   const getImageUrl = (url) => {
-    if (!url) return '/default-lawyer.png';
-    if (url.startsWith('http')) return url;
-    return `${API_BASE}${url}`;
+    if (!url) return PLACEHOLDER_IMAGE;
+    return url.startsWith('http') ? url : `${API_BASE}${url}`;
   };
 
-  // Only build visibleLawyers if data exists
+  // Determine visible lawyers (max 4 at a time)
   const visibleLawyers = lawyers.length
     ? Array.from({ length: Math.min(4, lawyers.length) }, (_, i) => lawyers[(startIdx + i) % lawyers.length])
     : [];
 
-  const trackWidth = 4 * 240;
+  const trackWidth = 4 * 240; // 4 cards * width
   const offset = -(startIdx * 240);
 
   return (
@@ -60,14 +62,11 @@ function HomeLawyerTeam() {
             style={{ width: `${trackWidth}px`, transform: `translateX(${offset}px)` }}
           >
             {visibleLawyers.length > 0 ? (
-              visibleLawyers.map((lawyer, idx) => {
-                const imageSrc = getImageUrl(lawyer?.imageUrl);
-                return (
-                  <div className="min-w-[220px] max-w-xs" key={lawyer?._id || idx}>
-                    <LawyerCard lawyer={lawyer} image={imageSrc} />
-                  </div>
-                );
-              })
+              visibleLawyers.map((lawyer, idx) => (
+                <div className="min-w-[220px] max-w-xs" key={lawyer._id || idx}>
+                  <LawyerCard lawyer={lawyer} image={getImageUrl(lawyer.imageUrl)} />
+                </div>
+              ))
             ) : (
               <div className="text-gray-500">No lawyers available.</div>
             )}

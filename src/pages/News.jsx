@@ -1,15 +1,21 @@
 import { useEffect, useState } from 'react';
 
+const API_BASE = 'https://law-firm-backend-e082.onrender.com';
+
 function News() {
   const [news, setNews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
-    fetch('https://law-firm-backend-e082.onrender.com/api/news/')
+    fetch(`${API_BASE}/api/news/`)
       .then(res => res.json())
-      .then(data => {
-        setNews(data);
+      .then(result => {
+        if (result.success && Array.isArray(result.data)) {
+          setNews(result.data);
+        } else {
+          setNews([]);
+        }
         setLoading(false);
       })
       .catch(() => {
@@ -32,6 +38,13 @@ function News() {
               key={item.id}
               className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-all border border-[#e5e2dc] flex flex-col"
             >
+              {item.imageUrl && (
+                <img
+                  src={item.imageUrl.startsWith('http') ? item.imageUrl : `${API_BASE}${item.imageUrl}`}
+                  alt={item.title}
+                  className="w-full h-48 object-cover rounded-lg mb-4"
+                />
+              )}
               <h2 className="text-2xl font-bold text-[#cfac33] mb-2">{item.title}</h2>
               {item.link && (
                 <a
@@ -46,6 +59,9 @@ function News() {
               <p className="text-[#23293a] mb-2 line-clamp-4">{item.description}</p>
             </div>
           ))}
+          {news.length === 0 && !loading && (
+            <div className="col-span-2 text-center text-[#bfa77a]">No news found.</div>
+          )}
         </div>
       </div>
     </section>

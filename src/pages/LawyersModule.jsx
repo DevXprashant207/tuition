@@ -127,7 +127,7 @@ function LawyerForm({ onSubmit, initialData, onCancel }) {
       <div className="flex gap-2">
         <button
           type="submit"
-          className="bg-[#bfa77a] text-white px-4 py-2 rounded"
+          className="bg-[#cfac33] text-white px-4 py-2 rounded"
         >
           {initialData ? 'Update' : 'Create'}
         </button>
@@ -230,7 +230,7 @@ function LawyersModule() {
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-bold text-[#23293a]">Lawyers</h2>
         <button
-          className="bg-[#bfa77a] text-white px-4 py-2 rounded"
+          className="bg-[#cfac33] text-white px-4 py-2 rounded"
           onClick={() => { setShowForm(true); setEditing(null); }}
         >
           Add Lawyer

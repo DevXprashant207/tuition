@@ -86,7 +86,7 @@ function ConsultationForm() {
         </h3>
 
         {thankYou ? (
-          <div className="bg-white rounded-xl shadow p-8 text-center text-[#7c6a4c] text-xl font-semibold">
+          <div className="bg-white rounded-xl shadow p-8 text-center text-[#cfac33] text-xl font-semibold">
             Thank you for your enquiry! We will get back to you soon.
           </div>
         ) : (

@@ -38,7 +38,7 @@ function EnquiryForm({ onSubmit, initialData, onCancel }) {
       <input name="lawId" value={form.lawId} onChange={handleChange} placeholder="Law ID" className="w-full border p-2 rounded" required />
       <textarea name="message" value={form.message} onChange={handleChange} placeholder="Message" className="w-full border p-2 rounded" required />
       <div className="flex gap-2">
-        <button type="submit" className="bg-[#bfa77a] text-white px-4 py-2 rounded">
+        <button type="submit" className="bg-[#cfac33] text-white px-4 py-2 rounded">
           {initialData ? 'Update' : 'Create'}
         </button>
         {onCancel && (

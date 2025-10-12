@@ -104,7 +104,7 @@ function ServiceForm({ onSubmit, initialData, onCancel }) {
       </div>
 
       <div className="flex gap-2">
-        <button type="submit" className="bg-[#bfa77a] text-white px-4 py-2 rounded">
+        <button type="submit" className="bg-[#cfac33] text-white px-4 py-2 rounded">
           {initialData ? 'Update' : 'Create'}
         </button>
         {onCancel && (
@@ -204,7 +204,7 @@ function ServicesModule() {
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-bold text-[#23293a]">Services</h2>
         <button
-          className="bg-[#bfa77a] text-white px-4 py-2 rounded"
+          className="bg-[#cfac33] text-white px-4 py-2 rounded"
           onClick={() => { setShowForm(true); setEditing(null); }}
         >
           Add Service
@@ -273,7 +273,7 @@ function ServicesModule() {
             ))}
             {services.length === 0 && (
               <tr>
-                <td colSpan="5" className="text-center p-4 text-[#bfa77a]">
+                <td colSpan="5" className="text-center p-4 text-[#cfac33]">
                   No services found.
                 </td>
               </tr>

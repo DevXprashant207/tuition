@@ -39,7 +39,7 @@ function Blog() {
             <BlogCard 
               key={post.id} 
               post={post}
-              onReadMore={() => navigate(`/blog/${post.slug}`)} // 👈 Redirect instead of popup
+              onReadMore={() => navigate(`/blog/${post.slug}`)}
             />
           ))}
         </div>

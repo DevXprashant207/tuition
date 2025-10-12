@@ -40,7 +40,8 @@ function Services() {
               key={service._id || service.id}
               name={service.name}
               slug={service.slug}
-              onLearnMore={() => navigate(`/services/${service.slug}`)} // ⬅ open new page
+              imageUrl={service.imageUrl ? `${API_BASE}${service.imageUrl}` : null} // ⬅ pass image from API
+              onLearnMore={() => navigate(`/services/${service.slug}`)}
             />
           ))}
         </div>
