@@ -26,6 +26,13 @@ function BlogDetail() {
   if (loading) return <div className="text-center py-10">Loading...</div>;
   if (error) return <div className="text-center py-10 text-red-500">{error}</div>;
 
+  // Helper function to get full image URL
+  const getImageUrl = (url) => {
+    if (!url) return '/default-image.png'; // fallback image
+    if (url.startsWith('http')) return url;
+    return `https://law-firm-backend-e082.onrender.com${url}`;
+  };
+
   return (
     <div className="max-w-4xl mx-auto py-16 px-6">
       <h1 className="text-4xl font-bold text-[#23293a] mb-4">{post.title}</h1>
@@ -35,13 +42,13 @@ function BlogDetail() {
           year: 'numeric', month: 'short', day: 'numeric'
         })}
       </p>
-      {post.imageUrl && (
-        <img
-          src={post.imageUrl}
-          alt={post.title}
-          className="w-full rounded-lg shadow-md mb-6"
-        />
-      )}
+
+      <img
+        src={getImageUrl(post.imageUrl)}
+        alt={post.title}
+        className="w-full rounded-lg shadow-md mb-6"
+      />
+
       <p className="text-gray-700 leading-relaxed">{post.content}</p>
     </div>
   );
