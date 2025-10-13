@@ -36,7 +36,12 @@ function Lawyers() {
       <div className="w-screen px-0 py-8 max-w-none">
         <h1 className="text-3xl font-bold text-[#23293a] mb-8 px-8">Our Lawyers</h1>
 
-        {loading && <div className="text-[#bfa77a] px-8">Loading...</div>}
+        {loading && <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#cfac33] mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading...</p>
+          </div>
+        </div>}
         {error && <div className="text-red-600 px-8">{error}</div>}
 
         <div className="flex flex-wrap gap-8 w-screen px-8">

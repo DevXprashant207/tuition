@@ -29,7 +29,12 @@ function News() {
       <div className="max-w-4xl mx-auto">
         <h1 className="text-4xl font-bold text-[#23293a] mb-8 text-center">Latest News</h1>
 
-        {loading && <div className="text-center text-[#cfac33]">Loading...</div>}
+        {loading && <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#cfac33] mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading...</p>
+          </div>
+        </div>}
         {error && <div className="text-center text-red-600">{error}</div>}
 
         <div className="grid md:grid-cols-2 gap-8">

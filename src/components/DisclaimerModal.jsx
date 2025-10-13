@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-function DisclaimerModal({ onClose }) {
+function DisclaimerModal({ onAgree }) {
   const handleDisagree = () => {
     window.close();
     window.location.href = 'about:blank';
@@ -54,17 +54,19 @@ function DisclaimerModal({ onClose }) {
 
           <div className="flex justify-center gap-4 mt-4">
             <button
-              onClick={onClose}
+              onClick={onAgree} // <-- updated prop
               className="bg-[#cfac33] text-white font-semibold py-3 px-8 rounded-full hover:bg-yellow-500 shadow-lg transition-all duration-300 transform hover:-translate-y-1"
             >
               I Agree
             </button>
-            <button
+
+            {/* Optional: Uncomment if you want a disagree button */}
+            {/* <button
               onClick={handleDisagree}
               className="bg-red-500 text-white font-semibold py-3 px-8 rounded-full hover:bg-red-600 shadow-lg transition-all duration-300 transform hover:-translate-y-1"
             >
               I Disagree
-            </button>
+            </button> */}
           </div>
         </motion.div>
       </motion.div>

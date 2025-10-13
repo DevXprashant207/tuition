@@ -58,7 +58,7 @@ function Navbar() {
   };
 
   useEffect(() => {
-    const timer = setTimeout(() => setShowPopup(true), 10000);
+    const timer = setTimeout(() => setShowPopup(true), 30000);
     return () => clearTimeout(timer);
   }, []);
 
