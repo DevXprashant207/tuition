@@ -1,14 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import LawyerCard from './LawyerCard';
+import React, { useEffect, useState } from "react";
+import LawyerCard from "./LawyerCard";
 
-const API_BASE = 'https://law-firm-backend-e082.onrender.com';
-const PLACEHOLDER_IMAGE = '/default-lawyer.png'; // fallback image
+const API_BASE = "https://law-firm-backend-e082.onrender.com";
+const PLACEHOLDER_IMAGE = "/default-lawyer.png";
 
 function HomeLawyerTeam() {
   const [lawyers, setLawyers] = useState([]);
-  const [startIdx, setStartIdx] = useState(0);
 
-  // Fetch lawyers from API
+  // Fetch lawyers
   useEffect(() => {
     fetch(`${API_BASE}/api/lawyers`)
       .then((res) => res.json())
@@ -19,34 +18,19 @@ function HomeLawyerTeam() {
           setLawyers([]);
         }
       })
-      .catch((err) => console.error('Failed to fetch lawyers:', err));
+      .catch((err) => console.error("Failed to fetch lawyers:", err));
   }, []);
-
-  // Auto-scroll every 2.5s if more than 4 lawyers
-  useEffect(() => {
-    if (lawyers.length > 4) {
-      const interval = setInterval(() => {
-        setStartIdx((prev) => (prev + 1) % lawyers.length);
-      }, 2500);
-      return () => clearInterval(interval);
-    }
-  }, [lawyers]);
 
   const getImageUrl = (url) => {
     if (!url) return PLACEHOLDER_IMAGE;
-    return url.startsWith('http') ? url : `${API_BASE}${url}`;
+    return url.startsWith("http") ? url : `${API_BASE}${url}`;
   };
 
-  // Determine visible lawyers (max 4 at a time)
-  const visibleLawyers = lawyers.length
-    ? Array.from({ length: Math.min(4, lawyers.length) }, (_, i) => lawyers[(startIdx + i) % lawyers.length])
-    : [];
-
-  const trackWidth = 4 * 240; // 4 cards * width
-  const offset = -(startIdx * 240);
+  // Duplicate list for seamless infinite scrolling
+  const duplicatedLawyers = [...lawyers, ...lawyers];
 
   return (
-    <section className="relative py-16 px-4 md:px-10 bg-[#f8f6f2]">
+    <section className="relative py-16 px-4 md:px-10 bg-[#f8f6f2] overflow-hidden">
       <div className="max-w-7xl mx-auto">
         <h2 className="text-base md:text-lg font-bold text-black mb-2 text-left tracking-widest uppercase">
           Team
@@ -56,23 +40,46 @@ function HomeLawyerTeam() {
         </h3>
         <div className="w-16 h-1 bg-gradient-to-r from-[#cfac33] to-[#cfac33] rounded mb-10 ml-0" />
 
-        <div className="overflow-hidden pb-2 relative" style={{ height: '320px' }}>
+        <div className="relative w-full overflow-hidden">
           <div
-            className="flex gap-8 absolute left-0 top-0 transition-transform duration-700"
-            style={{ width: `${trackWidth}px`, transform: `translateX(${offset}px)` }}
+            className="flex gap-6 animate-scroll-infinite"
+            style={{
+              width: `${duplicatedLawyers.length * 260}px`, // card width + gap
+            }}
           >
-            {visibleLawyers.length > 0 ? (
-              visibleLawyers.map((lawyer, idx) => (
-                <div className="min-w-[220px] max-w-xs" key={lawyer._id || idx}>
-                  <LawyerCard lawyer={lawyer} image={getImageUrl(lawyer.imageUrl)} />
-                </div>
-              ))
-            ) : (
-              <div className="text-gray-500">No lawyers available.</div>
-            )}
+            {duplicatedLawyers.map((lawyer, idx) => (
+              <div
+                className="min-w-[240px] flex-shrink-0"
+                key={`${lawyer._id || idx}-${idx}`}
+              >
+                <LawyerCard lawyer={lawyer} image={getImageUrl(lawyer.imageUrl)} />
+              </div>
+            ))}
           </div>
         </div>
       </div>
+
+      {/* Smooth infinite animation */}
+      <style>{`
+        @keyframes scrollInfinite {
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(-50%);
+          }
+        }
+
+        .animate-scroll-infinite {
+          animation: scrollInfinite 30s linear infinite;
+          will-change: transform;
+        }
+
+        /* Pause on hover for better UX */
+        .animate-scroll-infinite:hover {
+          animation-play-state: paused;
+        }
+      `}</style>
     </section>
   );
 }
