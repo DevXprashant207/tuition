@@ -18,13 +18,14 @@ function HeroSection() {
 
   return (
     <section
-      className="flex flex-col md:flex-row items-center justify-center gap-0 px-6 py-8 md:px-10 md:py-8 relative min-h-[500px] mt-0 md:mt-0"
-      style={{
-        backgroundImage: `linear-gradient(rgba(255,255,255,0.85),rgba(255,255,255,0.85)), url(${bgImage})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      }}
+      className="w-full bg-[#faf4e4]"
+      // style={{
+      //   backgroundImage: `linear-gradient(rgba(255,255,255,0.85),rgba(255,255,255,0.85)), url(${bgImage})`,
+      //   backgroundSize: 'cover',
+      //   backgroundPosition: 'center',
+      // }}
     >
+      <section className='flex flex-col md:flex-row items-center justify-center gap-0 px-6 py-8 md:px-10 md:py-8 relative min-h-[500px] mt-0 md:mt-0 bg-white  overflow-hidden shape-wavy-br-hero'>
       <div className="flex-1 flex items-center justify-center h-[400px] md:h-[500px]">
         <div className="bg-white rounded-lg shadow-lg overflow-hidden w-full h-full max-w-[650px] max-h-[400px] flex items-center justify-center">
           <img
@@ -63,6 +64,7 @@ function HeroSection() {
           </div>
         </div>
       </div>
+      </section>
     </section>
   );
 }

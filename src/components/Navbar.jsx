@@ -9,14 +9,13 @@ function Navbar() {
   const [progress, setProgress] = useState(0)
 
   useEffect(() => {
+    // ... no changes needed in the useEffect hook
     const computeEndTarget = () => {
       const footerEl = document.querySelector("#site-footer") || document.querySelector("footer")
       if (footerEl) {
-        // top of footer relative to document
         const rect = footerEl.getBoundingClientRect()
         return Math.max(1, rect.top + window.scrollY)
       }
-      // fallback: full document scrollable height
       return Math.max(1, document.documentElement.scrollHeight - window.innerHeight)
     }
 
@@ -35,7 +34,6 @@ function Navbar() {
 
     window.addEventListener("scroll", handleScroll, { passive: true })
     window.addEventListener("resize", handleResize)
-    // initialize on mount
     handleResize()
 
     return () => {
@@ -44,15 +42,32 @@ function Navbar() {
     }
   }, [])
 
+  // 1. Define common classes for the navigation links for the hover effect
+  const navLinkClasses = `
+    relative pb-1
+    after:content-[''] 
+    after:absolute 
+    after:left-0 
+    after:bottom-0 
+    after:w-full 
+    after:h-[2px] 
+    after:bg-[#B88A2F] 
+    after:scale-x-0 
+    after:origin-left 
+    after:transition-transform 
+    after:duration-300 
+    after:ease-out
+    hover:after:scale-x-100
+  `
+
   return (
-    <nav className="sticky top-0 z-[100] bg-white sm:pl-16 px-6 py-3 flex items-center justify-between">
+    <nav className="sticky top-0 z-[100] bg-white sm:pl-16 px-6 py-3 flex items-center justify-between shadow-md">
       {/* Progress track */}
       <div className="pointer-events-none absolute left-0 bottom-0 h-[2px] w-full bg-[#B88A2F]/20" />
       {/* Progress bar */}
       <div
-        className="pointer-events-none absolute left-0 bottom-0 h-[2px] bg-[#B88A2F] transition-[width] duration-150 ease-out"
+        className="pointer-events-none absolute left-0 bottom-0 h-[2px] bg-[#B88A2F]"
         style={{ width: `${progress * 100}%` }}
-        
       />
 
       <div className="flex items-center gap-2">
@@ -60,14 +75,15 @@ function Navbar() {
       </div>
 
       <div className="hidden md:flex gap-8 text-[#000000] font-medium">
-        <Link to="/">Home</Link>
-        <Link to="/services">Services</Link>
-        <Link to="/lawyers">Lawyers</Link>
-        <Link to="/blog">Blog</Link>
-        <Link to="/news">News/Articles</Link>
+        {/* 2. Apply the classes to each link */}
+        <Link to="/" className={navLinkClasses}>Home</Link>
+        <Link to="/services" className={navLinkClasses}>Services</Link>
+        <Link to="/lawyers" className={navLinkClasses}>Lawyers</Link>
+        <Link to="/blog" className={navLinkClasses}>Blog</Link>
+        <Link to="/news" className={navLinkClasses}>News/Articles</Link>
         <a
           href="#about-us"
-          className="cursor-pointer"
+          className={navLinkClasses} // Applied here as well
           onClick={(e) => {
             e.preventDefault()
             if (window.location.pathname !== "/") {
@@ -99,24 +115,15 @@ function Navbar() {
             style={{ zIndex: 51 }}
             onClick={(e) => e.stopPropagation()}
           >
-            <Link to="/" onClick={() => setOpen(false)}>
-              Home
-            </Link>
-            <Link to="/services" onClick={() => setOpen(false)}>
-              Services
-            </Link>
-            <Link to="/lawyers" onClick={() => setOpen(false)}>
-              Lawyers
-            </Link>
-            <Link to="/blog" onClick={() => setOpen(false)}>
-              Blog
-            </Link>
-            <Link to="/news" onClick={() => setOpen(false)}>
-              News/Articles
-            </Link>
+            {/* You can optionally apply the same effect to mobile links too */}
+            <Link to="/" className={navLinkClasses} onClick={() => setOpen(false)}>Home</Link>
+            <Link to="/services" className={navLinkClasses} onClick={() => setOpen(false)}>Services</Link>
+            <Link to="/lawyers" className={navLinkClasses} onClick={() => setOpen(false)}>Lawyers</Link>
+            <Link to="/blog" className={navLinkClasses} onClick={() => setOpen(false)}>Blog</Link>
+            <Link to="/news" className={navLinkClasses} onClick={() => setOpen(false)}>News/Articles</Link>
             <a
               href="#about-us"
-              className="cursor-pointer"
+              className={navLinkClasses}
               onClick={(e) => {
                 e.preventDefault()
                 if (window.location.pathname !== "/") {

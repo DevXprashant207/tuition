@@ -78,10 +78,10 @@ function ConsultationForm() {
   return (
     <section id="consultation" className="bg-white py-16 px-4 md:px-10">
       <div className="max-w-2xl mx-auto">
-        <h2 className="text-2xl md:text-4xl font-bold text-[#23293a] mb-2 text-left tracking-widest uppercase">
+        <h2 className="text-2xl md:text-4xl font-bold text-[#23293a] mb-2 text-center tracking-widest` uppercase">
           Contact Us
         </h2>
-        <h3 className="text-base md:text-lg font-serif font-bold text-[#cfac33] mb-6 text-left leading-tight">
+        <h3 className="text-base md:text-lg font-sans text-center font-semibold   text-[#cfac33] mb-6  leading-tight">
           Law is a complex matter that can lead to significant problems if disregarded. Allow us to assist you!
         </h3>
 
