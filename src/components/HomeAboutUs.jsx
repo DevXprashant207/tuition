@@ -10,7 +10,7 @@ function HomeAboutUs() {
           </p>
           <div className="mt-8 mb-2">
             <span className="block text-3xl font-signature text-[#000000] mb-2" style={{ fontFamily: 'Dancing Script, cursive' }}>Naman Gupta</span>
-            <span className="block text-xs tracking-widest text-[#000000]">CEO &amp; Founder of Gupta Law Firm</span>
+            <span className="block text-xs tracking-widest text-[#000000]">CEO &amp; Founder of Gupta Law ffice</span>
           </div>
         </div>
         <div className="flex-1 flex items-center justify-center bg-[#232220]">
