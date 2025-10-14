@@ -14,7 +14,7 @@ function HeroSection() {
     return () => clearInterval(interval);
   }, [images.length]);
 
-  const bgImage = 'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=1200&q=80';
+  const bgImage = '';
 
   return (
     <section
@@ -36,7 +36,7 @@ function HeroSection() {
         </div>
       </div>
       <div className="flex-1 flex items-center justify-center h-[400px] md:h-[500px]">
-        <div className="relative z-10 w-full max-w-[500px] text-left flex flex-col items-start justify-center h-full bg-transparent rounded-lg p-8">
+        <div className="relative z-10 w-full max-w-[500px] text-left flex flex-col items-start justify-center h-full bg-transparent rounded-lg p-">
           <h1 className="text-5xl md:text-5xl font-serif text-[#000000] mb-6 font-bold">Gupta Law Offices</h1>
           <p className="text-lg md:text-lg text-[#1a1a19] mb-6">
             We are a leading law firm in financial &amp; business industry.<br />
@@ -46,7 +46,7 @@ function HeroSection() {
             onClick={() =>
               document.getElementById('consultation')?.scrollIntoView({ behavior: 'smooth' })
             }
-            className="bg-[#cfac33] text-white px-7 py-3 rounded font-semibold mb-10 shadow hover:bg-[#f0c62e] transition-all"
+            className="bg-[#B88A2F] text-white px-7 py-3 rounded font-semibold mb-10 shadow hover:bg-[#f0c62e] transition-all"
           >
             CONTACT NOW &rarr;
           </button>

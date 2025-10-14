@@ -46,7 +46,7 @@ function App() {
   return (
     <div>
       <div
-        className={`min-h-screen bg-[#f8f6f2] font-serif flex flex-col relative transition-all duration-500 ${
+        className={`min-h-screen bg-white font-serif flex flex-col relative transition-all duration-500 ${
           showDisclaimer ? "blur-sm scale-[0.99]" : ""
         }`}
       >

@@ -79,7 +79,7 @@ function HomeTestimonials() {
               <div key={i} className="bg-white min-h-[18rem] overflow-scroll no-scrollbar rounded-xl shadow-lg p-4 md:p-6 flex flex-col items-center transition-all duration-300 scale-100 border-2 border-[#e5e2dc]" style={{width: '100%', maxWidth: '220px', minWidth: '160px', height: '220px', maxHeight: '220px'}}>
                 <img src={t.image} alt={t.name} className="w-12 h-12 rounded-full object-cover border-2 border-[#e5e2dc] mb-2" />
                 <div className="font-bold text-base text-[#23293a] text-center">{t.name}</div>
-                <div className="text-xs text-[#cfac33] text-center mb-1">{t.location}</div>
+                <div className="text-xs text-[#B88A2F] text-center mb-1">{t.location}</div>
                 <div className="flex justify-center mb-1"><StarRating stars={t.stars}/></div>
                 <div className="text-[#23293a] text-sm leading-relaxed italic text-center line-clamp-3 overflow-scroll no-scrollbar">{t.text}</div>
               </div>
@@ -87,8 +87,8 @@ function HomeTestimonials() {
           })}
         </div>
         <div className="flex justify-center gap-4 mt-8">
-          <button onClick={prev} className="w-10 h-10 rounded-full bg-white border-2 border-[#cfac33] flex items-center justify-center text-[#cfac33] text-xl font-bold shadow hover:bg-[#e5e2dc] transition-all">&#60;</button>
-          <button onClick={next} className="w-10 h-10 rounded-full bg-white border-2 border-[#cfac33] flex items-center justify-center text-[#cfac33] text-xl font-bold shadow hover:bg-[#e5e2dc] transition-all">&#62;</button>
+          <button onClick={prev} className="w-10 h-10 rounded-full bg-white border-2 border-[#B88A2F] flex items-center justify-center text-[#B88A2F] text-xl font-bold shadow hover:bg-[#e5e2dc] transition-all">&#60;</button>
+          <button onClick={next} className="w-10 h-10 rounded-full bg-white border-2 border-[#B88A2F] flex items-center justify-center text-[#B88A2F] text-xl font-bold shadow hover:bg-[#e5e2dc] transition-all">&#62;</button>
         </div>
       </div>
     </section>
