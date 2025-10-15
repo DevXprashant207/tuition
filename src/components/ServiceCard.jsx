@@ -1,4 +1,5 @@
 "use client"
+import fallbackImg from "../assets/service-default.jpeg";
 import { useNavigate } from "react-router-dom"
 import { Scale, Landmark, Gavel, Building2, Users2, FileSignature, ArrowRight } from "lucide-react"
 
@@ -19,7 +20,7 @@ function ServiceCard({ name, slug, imageUrl }) {
       {imageUrl ? (
         <div className="relative w-full h-44 overflow-hidden">
           <img
-            src={imageUrl || "/placeholder.svg"}
+            src={imageUrl || fallbackImg}
             alt={name}
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
