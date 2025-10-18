@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ImageUploader from '../components/ImageUploader';
+import { FiEdit2, FiTrash2 } from 'react-icons/fi';
 
 const API_BASE = 'https://law-firm-backend-e082.onrender.com';
 
@@ -21,9 +22,7 @@ function NewsForm({ onSubmit, initialData, onCancel }) {
     }
   }, [initialData]);
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleImageUpload = (file) => {
     if (file) {
@@ -37,21 +36,15 @@ function NewsForm({ onSubmit, initialData, onCancel }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     if (!form.title || !form.description) {
       alert('Title and Description are required.');
       return;
     }
-
     const formData = new FormData();
     formData.append('title', form.title);
     formData.append('link', form.link || '');
     formData.append('description', form.description);
-
-    if (form.image instanceof File) {
-      formData.append('image', form.image);
-    }
-
+    if (form.image instanceof File) formData.append('image', form.image);
     onSubmit(formData);
   };
 
@@ -92,14 +85,14 @@ function NewsForm({ onSubmit, initialData, onCancel }) {
           </div>
         )}
       </div>
-      <div className="flex gap-2">
-        <button type="submit" className="bg-[#cfac33] text-white px-4 py-2 rounded">
+      <div className="flex gap-2 justify-center">
+        <button type="submit" className="bg-[#cfac33] text-white px-5 py-2 rounded font-medium hover:bg-[#b8932b] transition">
           {initialData ? 'Update' : 'Create'}
         </button>
         {onCancel && (
           <button
             type="button"
-            className="bg-gray-200 px-4 py-2 rounded"
+            className="bg-gray-200 px-5 py-2 rounded font-medium hover:bg-gray-300 transition"
             onClick={onCancel}
           >
             Cancel
@@ -114,31 +107,25 @@ function NewsModule() {
   const [newsList, setNewsList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [editing, setEditing] = useState(null);
-  const [showForm, setShowForm] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   const token = localStorage.getItem('token');
 
   const fetchNews = async () => {
-  setLoading(true);
-  try {
-    const res = await fetch(`${API_BASE}/api/news/`);
-    const result = await res.json();
-    if (result.success && Array.isArray(result.data)) {
-      setNewsList(result.data);
-    } else {
+    setLoading(true);
+    try {
+      const res = await fetch(`${API_BASE}/api/news/`);
+      const result = await res.json();
+      if (result.success && Array.isArray(result.data)) setNewsList(result.data);
+      else setNewsList([]);
+    } catch (err) {
+      console.error(err);
       setNewsList([]);
     }
-  } catch (err) {
-    console.error(err);
-    setNewsList([]);
-  }
-  setLoading(false);
-};
+    setLoading(false);
+  };
 
-
-  useEffect(() => {
-    fetchNews();
-  }, []);
+  useEffect(() => { fetchNews(); }, []);
 
   const handleCreate = async (formData) => {
     try {
@@ -148,10 +135,8 @@ function NewsModule() {
         body: formData
       });
       const data = await res.json();
-      if (!data.error) {
-        setShowForm(false);
-        fetchNews();
-      } else alert(data.error);
+      if (!data.error) { setShowModal(false); fetchNews(); }
+      else alert(data.error);
     } catch (err) {
       console.error('Create news error:', err);
     }
@@ -166,11 +151,8 @@ function NewsModule() {
         body: formData
       });
       const data = await res.json();
-      if (!data.error) {
-        setEditing(null);
-        setShowForm(false);
-        fetchNews();
-      } else alert(data.error);
+      if (!data.error) { setEditing(null); setShowModal(false); fetchNews(); }
+      else alert(data.error);
     } catch (err) {
       console.error('Update news error:', err);
     }
@@ -195,79 +177,97 @@ function NewsModule() {
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-bold text-[#23293a]">News</h2>
+        <h2 className="text-xl font-bold text-[#23293a] border-b-2 border-[#cfac33] pb-2">News</h2>
         <button
           className="bg-[#cfac33] text-white px-4 py-2 rounded"
-          onClick={() => { setShowForm(true); setEditing(null); }}
+          onClick={() => { setShowModal(true); setEditing(null); }}
         >
           Add News
         </button>
       </div>
 
-      {showForm && (
-        <div className="mb-8 bg-[#f8f6f2] p-6 rounded-lg shadow">
-          <h3 className="text-lg font-semibold text-[#23293a] mb-4 text-center">
-            {editing ? 'Edit News' : 'Add New News'}
-          </h3>
-          <NewsForm
-            onSubmit={editing ? handleUpdate : handleCreate}
-            initialData={editing}
-            onCancel={() => { setShowForm(false); setEditing(null); }}
-          />
+      {/* Popup Modal Form */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
+            <h3 className="text-lg font-semibold text-[#23293a] mb-4 text-center">
+              {editing ? 'Edit News' : 'Add New News'}
+            </h3>
+            <NewsForm
+              onSubmit={editing ? handleUpdate : handleCreate}
+              initialData={editing}
+              onCancel={() => { setShowModal(false); setEditing(null); }}
+            />
+          </div>
         </div>
       )}
 
       {loading ? (
-        <div>Loading...</div>
+        <div className="min-h-[200px] flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#cfac33] mx-auto mb-2"></div>
+            <p className="text-gray-600">Loading...</p>
+          </div>
+        </div>
       ) : (
-        <table className="w-full border mt-4">
-          <thead>
-            <tr className="bg-[#f8f6f2]">
-              <th className="p-2 border">Title</th>
-              <th className="p-2 border">Link</th>
-              <th className="p-2 border">Description</th>
-              <th className="p-2 border">Image</th>
-              <th className="p-2 border">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {[...newsList].reverse().map(item => (
-              <tr key={item.id} className="text-center">
-                <td className="p-2 border">{item.title}</td>
-                <td className="p-2 border">
-                  {item.link ? <a href={item.link} target="_blank" rel="noreferrer">{item.link}</a> : 'N/A'}
-                </td>
-                <td className="p-2 border">{item.description}</td>
-                <td className="p-2 border">
-                  {item.imageUrl
-                    ? <img src={`${API_BASE}${item.imageUrl}`} alt="" className="w-12 h-12 object-cover rounded-full mx-auto" />
-                    : 'N/A'}
-                </td>
-                <td className="p-2 border">
-                  <button
-                    className="bg-blue-500 text-white px-2 py-1 rounded mr-2"
-                    onClick={() => { setEditing(item); setShowForm(true); }}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    className="bg-red-500 text-white px-2 py-1 rounded"
-                    onClick={() => handleDelete(item.id)}
-                  >
-                    Delete
-                  </button>
-                </td>
+        <div className="overflow-x-auto rounded-lg shadow">
+          <table className="w-full border border-gray-200">
+            <thead>
+              <tr className="bg-[#23293a] text-white">
+                <th className="p-3 font-semibold text-left">Title</th>
+                <th className="p-3 font-semibold text-left">Link</th>
+                <th className="p-3 font-semibold text-left">Description</th>
+                <th className="p-3 font-semibold text-left">Image</th>
+                <th className="p-3 font-semibold text-center">Actions</th>
               </tr>
-            ))}
-            {newsList.length === 0 && (
-              <tr>
-                <td colSpan="5" className="text-center p-4 text-[#cfac33]">
-                  No news found.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {[...newsList].reverse().map((item, index) => (
+                <tr key={item.id} className={`${index % 2 === 0 ? 'bg-white' : 'bg-[#f3f1eb]'} hover:bg-[#ede9dd] transition`}>
+                  <td className="p-3 border text-left">{item.title}</td>
+                  <td className="p-3 border text-left">
+                    {item.link ? (
+                      <a href={item.link} target="_blank" rel="noreferrer" className="text-blue-600 underline">
+                        {item.link}
+                      </a>
+                    ) : 'N/A'}
+                  </td>
+                  <td className="p-3 border text-left">
+                    <div className="text-sm text-gray-700 max-h-[3em] overflow-y-auto px-1" style={{ lineHeight: '1.5' }}>
+                      {item.description}
+                    </div>
+                  </td>
+                  <td className="p-3 border text-center">
+                    {item.imageUrl ? (
+                      <img src={`${API_BASE}${item.imageUrl}`} alt="" className="w-12 h-12 object-cover rounded-full mx-auto" />
+                    ) : 'N/A'}
+                  </td>
+                  <td className="p-3 border flex justify-center items-center gap-2">
+                    <button
+                      className="bg-blue-500 text-white px-3 py-1 rounded flex items-center gap-1 hover:bg-blue-600 transition"
+                      onClick={() => { setEditing(item); setShowModal(true); }}
+                    >
+                      <FiEdit2 /> Edit
+                    </button>
+                    <button
+                      className="bg-red-500 text-white px-3 py-1 rounded flex items-center gap-1 hover:bg-red-600 transition"
+                      onClick={() => handleDelete(item.id)}
+                    >
+                      <FiTrash2 /> Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+              {newsList.length === 0 && (
+                <tr>
+                  <td colSpan="5" className="text-center p-4 text-[#cfac33]">
+                    No news found.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );

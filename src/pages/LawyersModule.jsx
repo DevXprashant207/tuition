@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { FiEdit2, FiTrash2 } from 'react-icons/fi';
 import ImageUploader from '../components/ImageUploader';
 
 const API_BASE = 'https://law-firm-backend-e082.onrender.com';
-// Predefined list of services
+
 const SERVICE_OPTIONS = [
   { id: 'law1', name: 'Criminal Law' },
   { id: 'law2', name: 'Family Law' },
@@ -15,22 +16,18 @@ const SERVICE_OPTIONS = [
   { id: 'law9', name: 'Immigration Law' },
   { id: 'law10', name: 'Constitutional Law' },
 ];
-  
 
 function LawyerForm({ onSubmit, initialData, onCancel }) {
   const [form, setForm] = useState(initialData || {
     name: '',
     specialization: '',
-    experience: '', // Now stores selected service
+    experience: '',
     image: null,
     imagePreview: '',
   });
-
   const [error, setError] = useState('');
 
-  const handleChange = e => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -50,11 +47,9 @@ function LawyerForm({ onSubmit, initialData, onCancel }) {
     const formData = new FormData();
     formData.append('name', form.name);
     formData.append('title', form.specialization);
-    formData.append('bio', form.experience); // service selected
+    formData.append('bio', form.experience);
 
-    if (form.image instanceof File) {
-      formData.append('image', form.image);
-    }
+    if (form.image instanceof File) formData.append('image', form.image);
 
     onSubmit(formData);
   };
@@ -73,7 +68,6 @@ function LawyerForm({ onSubmit, initialData, onCancel }) {
     <form className="space-y-4" onSubmit={handleSubmit}>
       {error && <div className="text-red-600 text-sm">{error}</div>}
 
-      {/* Lawyer Name */}
       <input
         name="name"
         value={form.name}
@@ -83,7 +77,6 @@ function LawyerForm({ onSubmit, initialData, onCancel }) {
         required
       />
 
-      {/* Title */}
       <input
         name="specialization"
         value={form.specialization}
@@ -93,7 +86,6 @@ function LawyerForm({ onSubmit, initialData, onCancel }) {
         required
       />
 
-      {/* Service Dropdown (replacing manual input) */}
       <select
         name="experience"
         value={form.experience}
@@ -109,7 +101,6 @@ function LawyerForm({ onSubmit, initialData, onCancel }) {
         ))}
       </select>
 
-      {/* Image Upload */}
       <div>
         <ImageUploader onUpload={handleImageUpload} />
         {(form.imagePreview || form.imageUrl) && (
@@ -123,18 +114,17 @@ function LawyerForm({ onSubmit, initialData, onCancel }) {
         )}
       </div>
 
-      {/* Buttons */}
-      <div className="flex gap-2">
+      <div className="flex gap-2 justify-center">
         <button
           type="submit"
-          className="bg-[#cfac33] text-white px-4 py-2 rounded"
+          className="bg-[#cfac33] text-white px-5 py-2 rounded font-medium hover:bg-[#b8932b] transition"
         >
           {initialData ? 'Update' : 'Create'}
         </button>
         {onCancel && (
           <button
             type="button"
-            className="bg-gray-200 px-4 py-2 rounded"
+            className="bg-gray-200 px-5 py-2 rounded font-medium hover:bg-gray-300 transition"
             onClick={onCancel}
           >
             Cancel
@@ -144,7 +134,6 @@ function LawyerForm({ onSubmit, initialData, onCancel }) {
     </form>
   );
 }
-
 
 function LawyersModule() {
   const [lawyers, setLawyers] = useState([]);
@@ -169,26 +158,20 @@ function LawyersModule() {
     setLoading(false);
   };
 
-  useEffect(() => {
-    fetchLawyers();
-  }, []);
+  useEffect(() => { fetchLawyers(); }, []);
 
   const handleCreate = async (formData) => {
     try {
       const res = await fetch(`${API_BASE}/api/admin/lawyers`, {
         method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
         body: formData,
       });
-
       if (!res.ok) throw new Error('Failed to create lawyer');
-
       setShowForm(false);
       fetchLawyers();
     } catch (err) {
-      console.error('Failed to create lawyer:', err);
+      console.error(err);
     }
   };
 
@@ -196,19 +179,15 @@ function LawyersModule() {
     try {
       const res = await fetch(`${API_BASE}/api/admin/lawyers/${editing.id}`, {
         method: 'PUT',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
         body: formData,
       });
-
       if (!res.ok) throw new Error('Failed to update lawyer');
-
       setEditing(null);
       setShowForm(false);
       fetchLawyers();
     } catch (err) {
-      console.error('Failed to update lawyer:', err);
+      console.error(err);
     }
   };
 
@@ -221,16 +200,18 @@ function LawyersModule() {
       });
       fetchLawyers();
     } catch (err) {
-      console.error('Failed to delete lawyer:', err);
+      console.error(err);
     }
   };
 
   return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-bold text-[#23293a]">Lawyers</h2>
+    <div className="p-8 bg-[#ffffff] rounded-lg shadow-md">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold text-[#23293a] border-b-2 border-[#cfac33] pb-2">
+          Lawyers Management
+        </h2>
         <button
-          className="bg-[#cfac33] text-white px-4 py-2 rounded"
+          className="bg-[#cfac33] text-white px-5 py-2 rounded font-medium hover:bg-[#b8932b] transition"
           onClick={() => { setShowForm(true); setEditing(null); }}
         >
           Add Lawyer
@@ -238,64 +219,97 @@ function LawyersModule() {
       </div>
 
       {showForm && (
-        <div className="mb-8 bg-[#f8f6f2] p-6 rounded-lg shadow">
-          <h3 className="text-lg font-semibold text-[#23293a] mb-4 text-center">
-            {editing ? 'Edit Lawyer' : 'Add New Lawyer'}
-          </h3>
-          <LawyerForm
-            onSubmit={editing ? handleUpdate : handleCreate}
-            initialData={editing}
-            onCancel={() => { setShowForm(false); setEditing(null); }}
-          />
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative">
+            <button
+              className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-xl font-bold"
+              onClick={() => { setShowForm(false); setEditing(null); }}
+            >
+              &times;
+            </button>
+            <h3 className="text-xl font-semibold text-[#23293a] mb-4 text-center">
+              {editing ? 'Edit Lawyer' : 'Add New Lawyer'}
+            </h3>
+            <LawyerForm
+              onSubmit={editing ? handleUpdate : handleCreate}
+              initialData={editing}
+              onCancel={() => { setShowForm(false); setEditing(null); }}
+            />
+          </div>
         </div>
       )}
 
       {loading ? (
-        <div>Loading...</div>
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#cfac33] mx-auto mb-4"></div>
+            <p className="text-gray-600 font-medium">Loading...</p>
+          </div>
+        </div>
       ) : (
-        <table className="w-full border mt-4">
-          <thead>
-            <tr className="bg-[#f8f6f2]">
-              <th className="p-2 border">Name</th>
-              <th className="p-2 border">Title</th>
-              <th className="p-2 border">Service Description</th>
-              <th className="p-2 border">Image</th>
-              <th className="p-2 border">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {[...lawyers].reverse().map(lawyer => (
-              <tr key={lawyer.id || lawyer._id} className="text-center">
-                <td className="p-2 border">{lawyer.name}</td>
-                <td className="p-2 border">{lawyer.title}</td>
-                <td className="p-2 border">{lawyer.bio}</td>
-                <td className="p-2 border">
-                  {lawyer.imageUrl
-                    ? <img
-                        src={`${API_BASE}${lawyer.imageUrl}`}
-                        alt=""
-                        className="w-12 h-12 object-cover rounded-full mx-auto"
-                      />
-                    : 'N/A'}
-                </td>
-                <td className="p-2 border">
-                  <button
-                    className="bg-blue-500 text-white px-2 py-1 rounded mr-2"
-                    onClick={() => { setEditing(lawyer); setShowForm(true); }}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    className="bg-red-500 text-white px-2 py-1 rounded"
-                    onClick={() => handleDelete(lawyer.id || lawyer._id)}
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="overflow-x-auto rounded-lg shadow">
+          <table className="w-full border border-gray-200">
+  <thead>
+    <tr className="bg-[#23293a] text-white">
+      <th className="p-1.5 font-semibold text-left">Name</th>
+      <th className="p-1.5 font-semibold text-left">Title</th>
+      <th className="p-1.5 font-semibold text-left">Service Description</th>
+      <th className="p-1.5 font-semibold text-left">Image</th>
+      <th className="p-1.5 font-semibold text-center">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {[...lawyers].reverse().map((lawyer, index) => (
+      <tr key={lawyer.id || lawyer._id} className={`${index % 2 === 0 ? 'bg-white' : 'bg-[#f3f1eb]'} hover:bg-[#ede9dd] transition`}>
+        <td className="p-1.5 border-t">{lawyer.name}</td>
+        <td className="p-1.5 border-t">{lawyer.title}</td>
+        <td
+          className="p-1.5 border-t"
+          style={{
+            display: '-webkit-box',
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: 'vertical',
+            overflow: 'hidden'
+          }}
+        >
+          {lawyer.bio}
+        </td>
+        <td className="p-1.5 border-t text-center">
+          {lawyer.imageUrl
+            ? <img
+                src={`${API_BASE}${lawyer.imageUrl}`}
+                alt=""
+                className="w-10 h-10 object-cover rounded-full mx-auto"
+              />
+            : 'N/A'}
+        </td>
+        <td className="p-1.5 border-t text-center flex justify-center gap-1">
+          <button
+            className="bg-blue-500 text-white px-2 py-1 rounded flex items-center gap-1 hover:bg-blue-600 transition text-sm"
+            onClick={() => { setEditing(lawyer); setShowForm(true); }}
+          >
+            <FiEdit2 /> Edit
+          </button>
+          <button
+            className="bg-red-500 text-white px-2 py-1 rounded flex items-center gap-1 hover:bg-red-600 transition text-sm"
+            onClick={() => handleDelete(lawyer.id || lawyer._id)}
+          >
+            <FiTrash2 /> Delete
+          </button>
+        </td>
+      </tr>
+    ))}
+    {lawyers.length === 0 && !loading && (
+      <tr>
+        <td colSpan="5" className="text-center p-2 text-[#bfa77a] font-medium">
+          No lawyers found.
+        </td>
+      </tr>
+    )}
+  </tbody>
+</table>
+
+        </div>
       )}
     </div>
   );

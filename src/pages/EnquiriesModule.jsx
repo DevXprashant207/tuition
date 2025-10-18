@@ -3,7 +3,6 @@ import { ChevronDown } from 'lucide-react';
 
 const API_BASE = 'https://law-firm-backend-e082.onrender.com';
 
-// Map frontend dropdown values to backend status values
 const STATUS_MAP = {
   'New': 'pending',
   'Complete': 'complete',
@@ -11,7 +10,7 @@ const STATUS_MAP = {
   'Irrelevant': 'irrelevant'
 };
 
-// Enquiry form component
+// ---------- Enquiry Form ----------
 function EnquiryForm({ onSubmit, initialData, onCancel }) {
   const [form, setForm] = useState(initialData || {
     firstName: '',
@@ -23,7 +22,6 @@ function EnquiryForm({ onSubmit, initialData, onCancel }) {
   });
 
   const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
-
   const handleSubmit = e => {
     e.preventDefault();
     onSubmit(form);
@@ -37,12 +35,12 @@ function EnquiryForm({ onSubmit, initialData, onCancel }) {
       <input name="phone" value={form.phone} onChange={handleChange} placeholder="Phone" className="w-full border p-2 rounded" required />
       <input name="lawId" value={form.lawId} onChange={handleChange} placeholder="Law ID" className="w-full border p-2 rounded" required />
       <textarea name="message" value={form.message} onChange={handleChange} placeholder="Message" className="w-full border p-2 rounded" required />
-      <div className="flex gap-2">
-        <button type="submit" className="bg-[#cfac33] text-white px-4 py-2 rounded">
+      <div className="flex gap-2 justify-center">
+        <button type="submit" className="bg-[#cfac33] text-white px-5 py-2 rounded font-medium hover:bg-[#b8932b] transition">
           {initialData ? 'Update' : 'Create'}
         </button>
         {onCancel && (
-          <button type="button" className="bg-gray-200 px-4 py-2 rounded" onClick={onCancel}>
+          <button type="button" className="bg-gray-200 px-5 py-2 rounded font-medium hover:bg-gray-300 transition" onClick={onCancel}>
             Cancel
           </button>
         )}
@@ -51,39 +49,63 @@ function EnquiryForm({ onSubmit, initialData, onCancel }) {
   );
 }
 
-// Actions dropdown + Delete button
+// ---------- Enquiry Actions ----------
 function EnquiryActions({ enquiry, handleDelete, handleStatusUpdate }) {
   const [open, setOpen] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState(
     Object.keys(STATUS_MAP).find(key => STATUS_MAP[key] === enquiry.status) || 'New'
   );
+  const [loading, setLoading] = useState(false);
 
   const statuses = Object.keys(STATUS_MAP);
 
-  const handleSelect = async (statusLabel) => {
+  const handleStatusClick = async (statusLabel) => {
+    setLoading(true);
     setSelectedStatus(statusLabel);
     setOpen(false);
-    await handleStatusUpdate(enquiry.id, statusLabel);
+    try {
+      await handleStatusUpdate(enquiry.id, statusLabel);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteClick = async () => {
+    setLoading(true);
+    try {
+      await handleDelete(enquiry.id);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="flex justify-center items-center gap-2">
-      <div className="relative inline-block text-left">
+    <div className="flex items-center gap-2 justify-center relative">
+      {/* Status dropdown */}
+      <div className="relative">
         <button
           onClick={() => setOpen(!open)}
-          className="bg-blue-500 text-white px-3 py-1.5 rounded flex items-center gap-1 hover:bg-blue-600"
+          disabled={loading}
+          className={`min-w-[120px] px-3 py-1.5 rounded text-white text-sm flex items-center justify-between transition ${
+            loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'
+          }`}
         >
-          {selectedStatus}
-          <ChevronDown size={16} />
+          {loading ? (
+            <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full mx-auto"></div>
+          ) : (
+            <>
+              {selectedStatus} <ChevronDown size={14} />
+            </>
+          )}
         </button>
 
-        {open && (
-          <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+        {open && !loading && (
+          <div className="absolute right-0 mt-1 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
             {statuses.map(status => (
               <button
                 key={status}
-                onClick={() => handleSelect(status)}
-                className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition"
+                onClick={() => handleStatusClick(status)}
+                className="block w-full text-left px-3 py-1.5 text-gray-700 hover:bg-gray-100 text-sm transition"
               >
                 {status}
               </button>
@@ -92,17 +114,25 @@ function EnquiryActions({ enquiry, handleDelete, handleStatusUpdate }) {
         )}
       </div>
 
+      {/* Delete button */}
       <button
-        onClick={() => handleDelete(enquiry.id)}
-        className="bg-red-500 text-white px-3 py-1.5 rounded hover:bg-red-600"
+        onClick={handleDeleteClick}
+        disabled={loading}
+        className={`px-3 py-1.5 rounded text-white text-sm transition ${
+          loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-red-500 hover:bg-red-600'
+        }`}
       >
-        Delete
+        {loading ? (
+          <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full mx-auto"></div>
+        ) : (
+          'Delete'
+        )}
       </button>
     </div>
   );
 }
 
-// Main module
+// ---------- Main Module ----------
 function EnquiriesModule() {
   const [enquiries, setEnquiries] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -174,11 +204,6 @@ function EnquiriesModule() {
   const handleStatusUpdate = async (id, statusLabel) => {
     try {
       const status = STATUS_MAP[statusLabel];
-      if (!status) {
-        alert('Invalid status selected');
-        return;
-      }
-
       const res = await fetch(`${API_BASE}/api/admin/enquiries/${id}/status`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
@@ -195,11 +220,14 @@ function EnquiriesModule() {
   };
 
   return (
-    <div className="p-6">
+    <div className="p-8 bg-[#ffffff] rounded-lg shadow-md">
+      <h2 className="text-2xl font-bold text-[#23293a] mb-6 border-b-2 border-[#cfac33] pb-2">
+        Enquiries Management
+      </h2>
 
       {showForm && (
-        <div className="mb-8 bg-[#f8f6f2] p-6 rounded-lg shadow">
-          <h3 className="text-lg font-semibold text-[#23293a] mb-4 text-center">
+        <div className="mb-8 bg-white p-6 rounded-lg shadow-lg border border-gray-200">
+          <h3 className="text-xl font-semibold text-[#23293a] mb-4 text-center">
             {editing ? 'Edit Enquiry' : 'Add New Enquiry'}
           </h3>
           <EnquiryForm
@@ -211,45 +239,52 @@ function EnquiriesModule() {
       )}
 
       {loading ? (
-        <div>Loading...</div>
+         <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#cfac33] mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
       ) : (
-        <table className="w-full border mt-4">
-          <thead>
-            <tr className="bg-[#f8f6f2]">
-              <th className="p-2 border">Name</th>
-              <th className="p-2 border">Email</th>
-              <th className="p-2 border">Phone No</th>
-              <th className="p-2 border">Law</th>
-              <th className="p-2 border">Message</th>
-              <th className="p-2 border">Status / Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {[...enquiries].reverse().map(enquiry => (
-              <tr key={enquiry.id} className="text-center">
-                <td className="p-2 border">{enquiry.firstName} {enquiry.lastName}</td>
-                <td className="p-2 border">{enquiry.email}</td>
-                <td className="p-2 border">{enquiry.phone}</td>
-                <td className="p-2 border">{enquiry.lawId}</td>
-                <td className="p-2 border">{enquiry.message}</td>
-                <td className="p-2 border">
-                  <EnquiryActions
-                    enquiry={enquiry}
-                    handleDelete={handleDelete}
-                    handleStatusUpdate={handleStatusUpdate}
-                  />
-                </td>
+        <div className="overflow-x-auto rounded-lg shadow">
+          <table className="w-full border border-gray-200">
+            <thead>
+              <tr className="bg-[#23293a] text-white">
+                <th className="p-3 font-semibold text-left">Name</th>
+                <th className="p-3 font-semibold text-left">Email</th>
+                <th className="p-3 font-semibold text-left">Phone No</th>
+                <th className="p-3 font-semibold text-left">Law</th>
+                <th className="p-3 font-semibold text-left">Message</th>
+                <th className="p-3 font-semibold text-center">Status / Actions</th>
               </tr>
-            ))}
-            {enquiries.length === 0 && !loading && (
-              <tr>
-                <td colSpan="6" className="text-center p-4 text-[#bfa77a]">
-                  No enquiries found.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {[...enquiries].reverse().map((enquiry, index) => (
+                <tr key={enquiry.id} className={`${index % 2 === 0 ? 'bg-white' : 'bg-[#f3f1eb]'} hover:bg-[#ede9dd] transition`}>
+                  <td className="p-3 border-t">{enquiry.firstName} {enquiry.lastName}</td>
+                  <td className="p-3 border-t">{enquiry.email}</td>
+                  <td className="p-3 border-t">{enquiry.phone}</td>
+                  <td className="p-3 border-t">{enquiry.lawId}</td>
+                  <td className="p-3 border-t">{enquiry.message}</td>
+                  <td className="p-3 border-t text-center">
+                    <EnquiryActions
+                      enquiry={enquiry}
+                      handleDelete={handleDelete}
+                      handleStatusUpdate={handleStatusUpdate}
+                    />
+                  </td>
+                </tr>
+              ))}
+              {enquiries.length === 0 && !loading && (
+                <tr>
+                  <td colSpan="6" className="text-center p-4 text-[#bfa77a] font-medium">
+                    No enquiries found.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );

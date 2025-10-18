@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import ImageUploader from '../components/ImageUploader';
+import { FiEdit2, FiTrash2 } from 'react-icons/fi';
 
 const API_BASE = 'https://law-firm-backend-e082.onrender.com';
 
+// ---------- Service Form ----------
 function ServiceForm({ onSubmit, initialData, onCancel }) {
   const [form, setForm] = useState(initialData || {
     name: '',
@@ -23,9 +25,7 @@ function ServiceForm({ onSubmit, initialData, onCancel }) {
     }
   }, [initialData]);
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleImageUpload = (file) => {
     if (file) {
@@ -52,9 +52,7 @@ function ServiceForm({ onSubmit, initialData, onCancel }) {
     formData.append('slug', form.slug);
     formData.append('description', form.description);
 
-    if (form.image instanceof File) {
-      formData.append('image', form.image);
-    }
+    if (form.image instanceof File) formData.append('image', form.image);
 
     onSubmit(formData);
   };
@@ -69,7 +67,6 @@ function ServiceForm({ onSubmit, initialData, onCancel }) {
         onChange={handleChange}
         placeholder="Service Name"
         className="w-full border p-2 rounded"
-        required
       />
 
       <input
@@ -78,7 +75,6 @@ function ServiceForm({ onSubmit, initialData, onCancel }) {
         onChange={handleChange}
         placeholder="Slug"
         className="w-full border p-2 rounded"
-        required
       />
 
       <textarea
@@ -87,7 +83,6 @@ function ServiceForm({ onSubmit, initialData, onCancel }) {
         onChange={handleChange}
         placeholder="Description"
         className="w-full border p-2 rounded h-32 resize-none overflow-y-auto"
-        required
       />
 
       <div>
@@ -103,14 +98,14 @@ function ServiceForm({ onSubmit, initialData, onCancel }) {
         )}
       </div>
 
-      <div className="flex gap-2">
-        <button type="submit" className="bg-[#cfac33] text-white px-4 py-2 rounded">
+      <div className="flex gap-2 justify-center">
+        <button type="submit" className="bg-[#cfac33] text-white px-5 py-2 rounded font-medium hover:bg-[#b8932b] transition">
           {initialData ? 'Update' : 'Create'}
         </button>
         {onCancel && (
           <button
             type="button"
-            className="bg-gray-200 px-4 py-2 rounded"
+            className="bg-gray-200 px-5 py-2 rounded font-medium hover:bg-gray-300 transition"
             onClick={onCancel}
           >
             Cancel
@@ -121,11 +116,12 @@ function ServiceForm({ onSubmit, initialData, onCancel }) {
   );
 }
 
+// ---------- Services Module ----------
 function ServicesModule() {
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(false);
   const [editing, setEditing] = useState(null);
-  const [showForm, setShowForm] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   const token = localStorage.getItem('token');
 
@@ -143,9 +139,7 @@ function ServicesModule() {
     setLoading(false);
   };
 
-  useEffect(() => {
-    fetchServices();
-  }, []);
+  useEffect(() => { fetchServices(); }, []);
 
   const handleCreate = async (formData) => {
     try {
@@ -156,7 +150,7 @@ function ServicesModule() {
       });
       const data = await res.json();
       if (data.success) {
-        setShowForm(false);
+        setShowModal(false);
         fetchServices();
       } else alert(data.message || 'Failed to create service');
     } catch (err) {
@@ -175,7 +169,7 @@ function ServicesModule() {
       const data = await res.json();
       if (data.success) {
         setEditing(null);
-        setShowForm(false);
+        setShowModal(false);
         fetchServices();
       } else alert(data.message || 'Failed to update service');
     } catch (err) {
@@ -202,84 +196,106 @@ function ServicesModule() {
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-bold text-[#23293a]">Services</h2>
+        <h2 className="text-2xl font-bold text-[#23293a] border-b-2 border-[#cfac33] pb-2">
+          Services Management
+        </h2>
         <button
           className="bg-[#cfac33] text-white px-4 py-2 rounded"
-          onClick={() => { setShowForm(true); setEditing(null); }}
+          onClick={() => { setShowModal(true); setEditing(null); }}
         >
           Add Service
         </button>
       </div>
 
-      {showForm && (
-        <div className="mb-8 bg-[#f8f6f2] p-6 rounded-lg shadow">
-          <h3 className="text-lg font-semibold text-[#23293a] mb-4 text-center">
-            {editing ? 'Edit Service' : 'Add New Service'}
-          </h3>
-          <ServiceForm
-            onSubmit={editing ? handleUpdate : handleCreate}
-            initialData={editing}
-            onCancel={() => { setShowForm(false); setEditing(null); }}
-          />
+      {/* Popup Modal Form */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
+            <h3 className="text-lg font-semibold text-[#23293a] mb-4 text-center">
+              {editing ? 'Edit Service' : 'Add New Service'}
+            </h3>
+            <ServiceForm
+              onSubmit={editing ? handleUpdate : handleCreate}
+              initialData={editing}
+              onCancel={() => { setShowModal(false); setEditing(null); }}
+            />
+          </div>
         </div>
       )}
 
+      {/* Loading Spinner */}
       {loading ? (
-        <div>Loading...</div>
+        <div className="min-h-[200px] flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#cfac33] mx-auto mb-2"></div>
+            <p className="text-gray-600">Loading...</p>
+          </div>
+        </div>
       ) : (
-        <table className="w-full border mt-4">
-          <thead>
-            <tr className="bg-[#f8f6f2]">
-              <th className="p-2 border">Service Name</th>
-              <th className="p-2 border">Slug</th>
-              <th className="p-2 border">Description</th>
-              <th className="p-2 border">Image</th>
-              <th className="p-2 border">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {[...services].reverse().map(item => (
-              <tr key={item.id} className="text-center">
-                <td className="p-2 border">{item.name}</td>
-                <td className="p-2 border">{item.slug}</td>
-                <td className="p-2 border">
-                  <div
-                    className="max-h-24 overflow-y-auto text-sm text-gray-700 px-2"
-                    style={{ lineHeight: '1.5' }}
-                  >
-                    {item.description}
-                  </div>
-                </td>
-                <td className="p-2 border">
-                  {item.imageUrl
-                    ? <img src={`${API_BASE}${item.imageUrl}`} alt="" className="w-12 h-12 object-cover rounded-full mx-auto" />
-                    : 'N/A'}
-                </td>
-                <td className="p-2 border">
-                  <button
-                    className="bg-blue-500 text-white px-2 py-1 rounded mr-2"
-                    onClick={() => { setEditing(item); setShowForm(true); }}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    className="bg-red-500 text-white px-2 py-1 rounded"
-                    onClick={() => handleDelete(item.id)}
-                  >
-                    Delete
-                  </button>
-                </td>
+        <div className="overflow-x-auto rounded-lg shadow">
+          <table className="w-full border border-gray-200">
+            <thead>
+              <tr className="bg-[#23293a] text-white">
+                <th className="p-3 font-semibold text-left">Service Name</th>
+                <th className="p-3 font-semibold text-left">Slug</th>
+                <th className="p-3 font-semibold text-left">Description</th>
+                <th className="p-3 font-semibold text-left">Image</th>
+                <th className="p-3 font-semibold text-center">Actions</th>
               </tr>
-            ))}
-            {services.length === 0 && (
-              <tr>
-                <td colSpan="5" className="text-center p-4 text-[#cfac33]">
-                  No services found.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {[...services].reverse().map((item, index) => (
+                <tr
+                  key={item.id}
+                  className={`${index % 2 === 0 ? 'bg-white' : 'bg-[#f3f1eb]'} hover:bg-[#ede9dd] transition`}
+                >
+                  <td className="p-3 border-t text-left">{item.name}</td>
+                  <td className="p-3 border-t text-left">{item.slug}</td>
+                  <td className="p-3 border-t text-left">
+                    <div
+                      className="text-sm text-gray-700 px-2 overflow-hidden"
+                      style={{
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical',
+                        lineHeight: '1.5',
+                      }}
+                    >
+                      {item.description}
+                    </div>
+
+                  </td>
+                  <td className="p-3 border-t text-center">
+                    {item.imageUrl
+                      ? <img src={`${API_BASE}${item.imageUrl}`} alt="" className="w-12 h-12 object-cover rounded-full mx-auto" />
+                      : 'N/A'}
+                  </td>
+                  <td className="p-3 border-t flex justify-center items-center gap-2">
+                    <button
+                      className="bg-blue-500 text-white px-3 py-1 rounded flex items-center gap-1 hover:bg-blue-600 transition"
+                      onClick={() => { setEditing(item); setShowModal(true); }}
+                    >
+                      <FiEdit2 /> Edit
+                    </button>
+                    <button
+                      className="bg-red-500 text-white px-3 py-1 rounded flex items-center gap-1 hover:bg-red-600 transition"
+                      onClick={() => handleDelete(item.id)}
+                    >
+                      <FiTrash2 /> Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+              {services.length === 0 && (
+                <tr>
+                  <td colSpan="5" className="text-center p-4 text-[#cfac33]">
+                    No services found.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );

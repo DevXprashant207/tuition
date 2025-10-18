@@ -11,38 +11,47 @@ function AdminDashboard() {
   const navigate = useNavigate();
   const [activeSection, setActiveSection] = useState('dashboard');
 
-  // State for counts
   const [counts, setCounts] = useState({
     news: 0,
     lawyers: 0,
     posts: 0,
-    services: 0
+    services: 0,
+    enquiries: 0
   });
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) navigate('/admin/login');
 
-    // Fetch counts
     const fetchCounts = async () => {
       try {
-        const [newsRes, lawyersRes, postsRes, servicesRes] = await Promise.all([
+        const token = localStorage.getItem('token'); // your saved token
+
+        const [newsRes, lawyersRes, postsRes, servicesRes, enquiriesRes] = await Promise.all([
           fetch('https://law-firm-backend-e082.onrender.com/api/news/').then(res => res.json()),
           fetch('https://law-firm-backend-e082.onrender.com/api/lawyers').then(res => res.json()),
           fetch('https://law-firm-backend-e082.onrender.com/api/posts/').then(res => res.json()),
-          fetch('https://law-firm-backend-e082.onrender.com/api/services/').then(res => res.json())
+          fetch('https://law-firm-backend-e082.onrender.com/api/services/').then(res => res.json()),
+          fetch('https://law-firm-backend-e082.onrender.com/api/admin/enquiries?limit=1000', {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          }).then(res => res.json())
         ]);
 
         setCounts({
-           news: Array.isArray(newsRes) ? newsRes.length : 0,
+          news: newsRes.data?.length || 0,
           lawyers: lawyersRes.data?.length || 0,
           posts: postsRes.data?.length || 0,
-          services: servicesRes.data?.length || 0
-      });
+          services: servicesRes.data?.length || 0,
+          enquiries: Array.isArray(enquiriesRes.data) ? enquiriesRes.data.length : 0
+        });
+
       } catch (error) {
         console.error('Failed to fetch counts:', error);
       }
     };
+
 
     fetchCounts();
   }, [navigate]);
@@ -50,7 +59,7 @@ function AdminDashboard() {
   return (
     <div className="min-h-screen bg-[#f8f6f2] font-serif flex">
       {/* Sidebar */}
-      <aside className="w-64 bg-[#23293a] text-white flex flex-col py-8 px-4">
+      <aside className="w-64 bg-[#23293a] text-white flex flex-col py-8 px-4 shadow-lg">
         <div className="flex items-center gap-2 mb-8">
           <span className="bg-[#cfac33] rounded-full p-2">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -59,42 +68,65 @@ function AdminDashboard() {
           </span>
           <span className="font-bold text-lg">Gupta Law Offices</span>
         </div>
+
         <nav className="flex flex-col gap-4">
-          <button className={`text-left px-4 py-2 rounded transition ${activeSection==='dashboard' ? 'bg-[#cfac33] text-white' : 'hover:bg-[#cfac33] hover:text-white'}`} onClick={() => setActiveSection('dashboard')}>Dashboard</button>
-          <button className={`text-left px-4 py-2 rounded transition ${activeSection==='enquiries' ? 'bg-[#cfac33] text-white' : 'hover:bg-[#cfac33] hover:text-white'}`} onClick={() => setActiveSection('enquiries')}>Enquiries</button>
-          <button className={`text-left px-4 py-2 rounded transition ${activeSection==='lawyers' ? 'bg-[#cfac33] text-white' : 'hover:bg-[#cfac33] hover:text-white'}`} onClick={() => setActiveSection('lawyers')}>Lawyers</button>
-          <button className={`text-left px-4 py-2 rounded transition ${activeSection==='services' ? 'bg-[#cfac33] text-white' : 'hover:bg-[#cfac33] hover:text-white'}`} onClick={() => setActiveSection('services')}>Services</button>
-          <button className={`text-left px-4 py-2 rounded transition ${activeSection==='posts' ? 'bg-[#cfac33] text-white' : 'hover:bg-[#cfac33] hover:text-white'}`} onClick={() => setActiveSection('posts')}>Blogs & Articles</button>
-          <button className={`text-left px-4 py-2 rounded transition ${activeSection==='news' ? 'bg-[#cfac33] text-white' : 'hover:bg-[#cfac33] hover:text-white'}`} onClick={() => setActiveSection('news')}>News</button>
+          {['dashboard', 'enquiries', 'lawyers', 'services', 'posts', 'news'].map((section) => (
+            <button
+              key={section}
+              className={`text-left px-4 py-2 rounded transition ${activeSection === section
+                  ? 'bg-[#cfac33] text-white shadow-md'
+                  : 'hover:bg-[#cfac33] hover:text-white'
+                }`}
+              onClick={() => setActiveSection(section)}
+            >
+              {section === 'posts'
+                ? 'Blogs & Articles'
+                : section.charAt(0).toUpperCase() + section.slice(1)}
+            </button>
+          ))}
         </nav>
-        <button className="mt-auto px-4 py-2 rounded bg-[#cfac33] text-white font-semibold" onClick={() => {localStorage.removeItem('token');navigate('/admin/login');}}>Logout</button>
+
+        <button
+          className="mt-auto px-4 py-2 rounded bg-[#cfac33] text-white font-semibold hover:bg-[#b8982b] transition"
+          onClick={() => {
+            localStorage.removeItem('token');
+            navigate('/admin/login');
+          }}
+        >
+          Logout
+        </button>
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 p-10">
-        <h1 className="text-3xl font-bold text-[#23293a] mb-8">Admin Dashboard</h1>
+      <main className="flex-1 p-10 bg-gradient-to-b from-[#ffffff] to-[#ffffff] shadow-inner rounded-tl-3xl transition-all">
+        <h1 className="text-3xl font-bold text-[#23293a] mb-8 border-b pb-2">Admin Dashboard</h1>
 
+        {/* Dashboard Overview with Quick Links */}
         {activeSection === 'dashboard' && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="bg-white p-6 rounded-lg shadow hover:shadow-xl transition">
-              <h2 className="text-xl font-semibold text-[#23293a] mb-2">News</h2>
-              <p className="text-3xl font-bold text-[#cfac33]">{counts.news}</p>
-            </div>
-            <div className="bg-white p-6 rounded-lg shadow hover:shadow-xl transition">
-              <h2 className="text-xl font-semibold text-[#23293a] mb-2">Lawyers</h2>
-              <p className="text-3xl font-bold text-[#cfac33]">{counts.lawyers}</p>
-            </div>
-            <div className="bg-white p-6 rounded-lg shadow hover:shadow-xl transition">
-              <h2 className="text-xl font-semibold text-[#23293a] mb-2">Posts</h2>
-              <p className="text-3xl font-bold text-[#cfac33]">{counts.posts}</p>
-            </div>
-            <div className="bg-white p-6 rounded-lg shadow hover:shadow-xl transition">
-              <h2 className="text-xl font-semibold text-[#23293a] mb-2">Services</h2>
-              <p className="text-3xl font-bold text-[#cfac33]">{counts.services}</p>
+          <div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+              {[
+                { label: 'News', value: counts.news, key: 'news' },
+                { label: 'Lawyers', value: counts.lawyers, key: 'lawyers' },
+                { label: 'Posts', value: counts.posts, key: 'posts' },
+                { label: 'Services', value: counts.services, key: 'services' },
+                { label: 'Enquiries', value: counts.enquiries, key: 'enquiries' } // Added Enquiries
+              ].map(({ label, value, key }) => (
+                <div
+                  key={key}
+                  onClick={() => setActiveSection(key)}
+                  className="bg-white cursor-pointer p-6 rounded-2xl shadow-md hover:shadow-2xl hover:-translate-y-1 transform transition duration-300"
+                >
+                  <h3 className="text-lg font-semibold text-[#23293a] mb-1">{label}</h3>
+                  <p className="text-3xl font-bold text-[#cfac33]">{value}</p>
+                  <p className="text-sm text-gray-500 mt-2">View and manage {label.toLowerCase()}</p>
+                </div>
+              ))}
             </div>
           </div>
         )}
 
+        {/* Section Components */}
         {activeSection === 'lawyers' && <LawyersModule />}
         {activeSection === 'enquiries' && <EnquiriesModule />}
         {activeSection === 'posts' && <PostsModule />}
