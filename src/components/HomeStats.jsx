@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 
 const stats = [
-  { value: 1000, suffix: '+', label: 'Client Consultations' },
-  { value: 95, suffix: '%', label: 'Successful Cases' },
-  { value: 10, suffix: 'm', label: 'Recovered cost for clients' },
-  { value: 30, suffix: '+', label: 'Professional Attorneys' },
+  { value: 1000, suffix: '+', label: 'Students Guided' },
+  { value: 95, suffix: '%', label: 'Satisfied Parents' },
+  { value: 10, suffix: 'm', label: 'Expert Tutors' },
+  { value: 30, suffix: '+', label: 'Cities Covered' },
 ];
 
 function StatCard({ value, suffix, label, duration = 1200 }) {

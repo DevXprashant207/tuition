@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import slider1 from '../assets/HeroSection/he';
-import slider2 from '../assets/HeroSection/slider-item-2.jpg';
-import slider3 from '../assets/HeroSection/slider-item-3.jpg';
+import slider1 from '../assets/HeroSection/hero1.jpg';
+import slider2 from '../assets/HeroSection/heor2.jpg';
+import slider3 from '../assets/HeroSection/hero3.jpg';
 
 function HeroSection() {
   const images = [slider1, slider2, slider3];
@@ -38,10 +38,10 @@ function HeroSection() {
       </div>
       <div className="flex-1 flex items-center justify-center h-[400px] md:h-[500px]">
         <div className="relative z-10 w-full max-w-[500px] text-left flex flex-col items-start justify-center h-full bg-transparent rounded-lg p-">
-          <h1 className="text-5xl md:text-5xl font-serif text-[#000000] mb-6 font-bold">Gupta Law Offices</h1>
+          <h1 className="text-5xl md:text-5xl font-serif text-[#000000] mb-6 font-bold">Up Home Tuitions</h1>
           <p className="text-lg md:text-lg text-[#1a1a19] mb-6">
-            We are a leading law firm in financial &amp; business industry.<br />
-            With more than 20 years of experience.
+            UpHomeTuition connects students with trusted, verified home tutors for every subject and grade.
+Whether you’re looking to boost your grades or share your knowledge, we make learning personal, simple, and effective.
           </p>
           <button
             onClick={() =>
@@ -56,10 +56,10 @@ function HeroSection() {
               className="block text-3xl font-signature text-[#000000] mb-2"
               style={{ fontFamily: 'Dancing Script, cursive' }}
             >
-              Naman Gupta
+              Saurabh Yadav
             </span>
             <span className="block text-xs tracking-widest text-[#000000]">
-              CEO, GUPTA LAW OFFICES
+              CEO, Up Home Tuitions
             </span>
           </div>
         </div>

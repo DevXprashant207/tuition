@@ -1,48 +1,46 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { Link } from "react-router-dom"
-import logo from "../assets/HeaderLogo.png"
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import logo from "../assets/HeaderLogo.png";
 
 function Navbar() {
-  const [open, setOpen] = useState(false)
-  const [progress, setProgress] = useState(0)
+  const [open, setOpen] = useState(false);
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    // ... no changes needed in the useEffect hook
     const computeEndTarget = () => {
-      const footerEl = document.querySelector("#site-footer") || document.querySelector("footer")
+      const footerEl = document.querySelector("#site-footer") || document.querySelector("footer");
       if (footerEl) {
-        const rect = footerEl.getBoundingClientRect()
-        return Math.max(1, rect.top + window.scrollY)
+        const rect = footerEl.getBoundingClientRect();
+        return Math.max(1, rect.top + window.scrollY);
       }
-      return Math.max(1, document.documentElement.scrollHeight - window.innerHeight)
-    }
+      return Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+    };
 
-    let endTarget = computeEndTarget()
+    let endTarget = computeEndTarget();
 
     const handleScroll = () => {
-      const y = window.scrollY
-      const pct = Math.min(1, Math.max(0, y / endTarget))
-      setProgress(pct)
-    }
+      const y = window.scrollY;
+      const pct = Math.min(1, Math.max(0, y / endTarget));
+      setProgress(pct);
+    };
 
     const handleResize = () => {
-      endTarget = computeEndTarget()
-      handleScroll()
-    }
+      endTarget = computeEndTarget();
+      handleScroll();
+    };
 
-    window.addEventListener("scroll", handleScroll, { passive: true })
-    window.addEventListener("resize", handleResize)
-    handleResize()
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleResize);
+    handleResize();
 
     return () => {
-      window.removeEventListener("scroll", handleScroll)
-      window.removeEventListener("resize", handleResize)
-    }
-  }, [])
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
-  // 1. Define common classes for the navigation links for the hover effect
   const navLinkClasses = `
     relative pb-1
     after:content-[''] 
@@ -58,55 +56,61 @@ function Navbar() {
     after:duration-300 
     after:ease-out
     hover:after:scale-x-100
-  `
+  `;
 
   return (
-    <nav className="sticky top-0 z-[100] bg-white sm:pl-16 px-6 py-3 flex items-center justify-between shadow-md">
+    <nav className="sticky top-0 z-[100] bg-white px-6 md:px-10 h-16 flex items-center justify-between shadow-md">
       {/* Progress track */}
       <div className="pointer-events-none absolute left-0 bottom-0 h-[2px] w-full bg-[#B88A2F]/20" />
-      {/* Progress bar */}
       <div
         className="pointer-events-none absolute left-0 bottom-0 h-[2px] bg-[#B88A2F]"
         style={{ width: `${progress * 100}%` }}
       />
 
-      <div className="flex items-center gap-2">
-        <img src={logo || "/placeholder.svg"} alt="Logo" className="h-12 w-32" />
+      {/* Logo */}
+      <div className="flex items-center">
+        <img src={logo || "/placeholder.svg"} alt="Logo" className="h-13 w-35" />
       </div>
 
-      <div className="hidden md:flex gap-8 text-[#000000] font-medium">
-        {/* 2. Apply the classes to each link */}
+      {/* Desktop Links */}
+      <div className="hidden md:flex gap-6 text-[#000000] font-medium items-center">
         <Link to="/" className={navLinkClasses}>Home</Link>
-        <Link to="/services" className={navLinkClasses}>Services</Link>
-        <Link to="/lawyers" className={navLinkClasses}>Lawyers</Link>
-        <Link to="/blog" className={navLinkClasses}>Blog</Link>
-        <Link to="/news" className={navLinkClasses}>News/Articles</Link>
+        <Link to="/subjects" className={navLinkClasses}>Subjects</Link>
+        <Link to="/tutors" className={navLinkClasses}>Tutors</Link>
+        <Link to="/becomeaTutor" className={navLinkClasses}>Become a Tutor</Link>
+        <Link to="/hireTutor" className={navLinkClasses}>Hire Tutor</Link>
+        <Link to="/Articles" className={navLinkClasses}>Articles</Link>
         <a
           href="#about-us"
-          className={navLinkClasses} // Applied here as well
+          className={navLinkClasses}
           onClick={(e) => {
-            e.preventDefault()
+            e.preventDefault();
             if (window.location.pathname !== "/") {
-              window.location.href = "/#about-us"
+              window.location.href = "/#about-us";
             } else {
-              document.getElementById("about-us")?.scrollIntoView({ behavior: "smooth" })
+              document.getElementById("about-us")?.scrollIntoView({ behavior: "smooth" });
             }
-            setOpen(false)
+            setOpen(false);
           }}
         >
-          About us
+          About Us
         </a>
-        <Link to="/admin/login" className="bg-[#B88A2F] text-white px-4 py-1 rounded font-semibold ml-2">
+        <Link
+          to="/admin/login"
+          className="bg-[#B88A2F] text-white px-4 py-1 rounded font-semibold ml-2"
+        >
           Admin
         </Link>
       </div>
 
+      {/* Mobile Menu Button */}
       <button className="md:hidden" onClick={() => setOpen(!open)} aria-label="Open menu">
-        <span className={`block w-6 h-0.5 bg-[#7c6a4c] mb-1 transition-all ${open ? "rotate-45 translate-y-2" : ""}`} />
+        <span className={`block w-6 h-0.5 bg-[#7c6a4c] mb-1 transition-all ${open ? "rotate-45 translate-y-1.5" : ""}`} />
         <span className={`block w-6 h-0.5 bg-[#7c6a4c] mb-1 transition-all ${open ? "opacity-0" : ""}`} />
-        <span className={`block w-6 h-0.5 bg-[#7c6a4c] transition-all ${open ? "-rotate-45 -translate-y-2" : ""}`} />
+        <span className={`block w-6 h-0.5 bg-[#7c6a4c] transition-all ${open ? "-rotate-45 -translate-y-1.5" : ""}`} />
       </button>
 
+      {/* Mobile Menu */}
       {open && (
         <div className="fixed inset-0 z-50">
           <div className="absolute inset-0 bg-black bg-opacity-40" onClick={() => setOpen(false)} />
@@ -115,26 +119,26 @@ function Navbar() {
             style={{ zIndex: 51 }}
             onClick={(e) => e.stopPropagation()}
           >
-            {/* You can optionally apply the same effect to mobile links too */}
-            <Link to="/" className={navLinkClasses} onClick={() => setOpen(false)}>Home</Link>
-            <Link to="/services" className={navLinkClasses} onClick={() => setOpen(false)}>Services</Link>
-            <Link to="/lawyers" className={navLinkClasses} onClick={() => setOpen(false)}>Lawyers</Link>
-            <Link to="/blog" className={navLinkClasses} onClick={() => setOpen(false)}>Blog</Link>
-            <Link to="/news" className={navLinkClasses} onClick={() => setOpen(false)}>News/Articles</Link>
+            <Link to="/" className={navLinkClasses}>Home</Link>
+        <Link to="/subjects" className={navLinkClasses}>Subjects</Link>
+        <Link to="/tutors" className={navLinkClasses}>Tutors</Link>
+        <Link to="/becomeaTutor" className={navLinkClasses}>Become a Tutor</Link>
+        <Link to="/hireTutor" className={navLinkClasses}>Hire Tutor</Link>
+        <Link to="/Articles" className={navLinkClasses}>Articles</Link>
             <a
               href="#about-us"
               className={navLinkClasses}
               onClick={(e) => {
-                e.preventDefault()
+                e.preventDefault();
                 if (window.location.pathname !== "/") {
-                  window.location.href = "/#about-us"
+                  window.location.href = "/#about-us";
                 } else {
-                  document.getElementById("about-us")?.scrollIntoView({ behavior: "smooth" })
+                  document.getElementById("about-us")?.scrollIntoView({ behavior: "smooth" });
                 }
-                setOpen(false)
+                setOpen(false);
               }}
             >
-              About us
+              About Us
             </a>
             <Link
               to="/admin/login"
@@ -147,7 +151,7 @@ function Navbar() {
         </div>
       )}
     </nav>
-  )
+  );
 }
 
-export default Navbar
+export default Navbar;

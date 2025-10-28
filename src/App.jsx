@@ -1,6 +1,7 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Navbar from "./components/Navbar";
+import Topbar from "./components/Topbar";
 import Footer from "./components/Footer";
 import HeroSection from "./components/HeroSection";
 import HomeAboutUs from "./components/HomeAboutUs";
@@ -20,7 +21,7 @@ import AdminLogin from "./pages/AdminLogin";
 import News from "./pages/News";
 import NewsDetail from "./pages/NewsDetail";
 import AdminNews from "./pages/AdminNews";
-import AdminEnquiries from "./pages/AdminEnquiries";
+
 import DisclaimerModal from "./components/DisclaimerModal";
 import "./App.css";
 
@@ -30,11 +31,8 @@ function App() {
 
   useEffect(() => {
     const agreed = localStorage.getItem("disclaimerAgreed");
-    if (agreed === "true") {
-      setHasAgreed(true);
-    } else {
-      setShowDisclaimer(true);
-    }
+    if (agreed === "true") setHasAgreed(true);
+    else setShowDisclaimer(true);
   }, []);
 
   const handleAgree = () => {
@@ -50,6 +48,7 @@ function App() {
           showDisclaimer ? "blur-sm scale-[0.99]" : ""
         }`}
       >
+        <Topbar/>
         <Navbar />
 
         <div className="flex-1">
@@ -65,12 +64,10 @@ function App() {
                   <HomeStats />
                   <HomeTestimonials />
                   <HomeCaseStudies />
-                  {/* 👇 Show Enquiry only if user agreed */}
                   {hasAgreed && <ConsultationForm />}
                 </>
               }
             />
-            <Route path="/consultation" element={<ConsultationForm />} />
             <Route path="/services" element={<Services />} />
             <Route path="/services/:id" element={<ServiceDetails />} />
             <Route path="/lawyers" element={<Lawyers />} />
@@ -81,14 +78,12 @@ function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/admin/news" element={<AdminNews />} />
-            <Route path="/admin/enquiries" element={<AdminEnquiries />} />
           </Routes>
         </div>
 
         <Footer />
       </div>
 
-      {/* 👇 Show Disclaimer Modal on top */}
       {showDisclaimer && (
         <div className="absolute inset-0 z-50 flex items-center justify-center">
           <DisclaimerModal onAgree={handleAgree} />

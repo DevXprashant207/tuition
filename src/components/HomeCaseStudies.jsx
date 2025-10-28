@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import sliderImg from '../assets/HeroSection/slider-item-2.jpg';
+import sliderImg from '../assets/HeroSection/hero1.jpg';
 
 function CaseCard({ title, category, description }) {
   return (

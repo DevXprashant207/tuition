@@ -1,73 +1,138 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import ServiceCard from "../components/ServiceCard"
-
-const API_BASE = "https://law-firm-backend-e082.onrender.com"
+import { useEffect, useState } from "react";
 
 function Services() {
-  const [services, setServices] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const [loading, setLoading] = useState(true);
+
+  const subjects = [
+    {
+      id: 1,
+      name: "Mathematics",
+      classes: "Class 6th – 12th",
+      description:
+        "Master concepts of Algebra, Geometry, Trigonometry, and Calculus through structured guidance and daily practice sessions.",
+    },
+    {
+      id: 2,
+      name: "Science",
+      classes: "Class 6th – 12th",
+      description:
+        "Learn Physics, Chemistry, and Biology with hands-on experiments, interactive visuals, and concept-based learning.",
+    },
+    {
+      id: 3,
+      name: "English Language",
+      classes: "Class 1st – 12th",
+      description:
+        "Improve reading, writing, grammar, and communication skills with personalized teaching methods and interactive sessions.",
+    },
+    {
+      id: 4,
+      name: "Computer Science",
+      classes: "Class 6th – 12th",
+      description:
+        "Gain foundational knowledge in programming, problem-solving, and logical thinking using beginner-friendly approaches.",
+    },
+    {
+      id: 5,
+      name: "Social Studies",
+      classes: "Class 6th – 10th",
+      description:
+        "Understand History, Geography, Civics, and Economics in a simplified, story-based, and analytical way.",
+    },
+    {
+      id: 6,
+      name: "Hindi",
+      classes: "Class 1st – 12th",
+      description:
+        "Enhance your Hindi grammar, comprehension, and writing with literature-rich sessions led by experienced tutors.",
+    },
+    {
+      id: 7,
+      name: "Competitive Exam Preparation",
+      classes: "JEE | NEET | CUET | Olympiads",
+      description:
+        "Focused preparation for national-level exams with topic-wise tests, progress tracking, and doubt-solving classes.",
+    },
+    {
+      id: 8,
+      name: "Coding & Programming",
+      classes: "Beginner – Advanced",
+      description:
+        "Learn HTML, CSS, JavaScript, and Python with project-based learning and mentor-led guidance.",
+    },
+  ];
 
   useEffect(() => {
-    fetch(`${API_BASE}/api/services`)
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          // only take first 6 for homepage
-          setServices(data.data.slice(0, 6))
-        } else {
-          setError("Failed to fetch services")
-        }
-      })
-      .catch(() => setError("Failed to fetch services"))
-      .finally(() => setLoading(false))
-  }, [])
+    // Simulate data loading
+    const timer = setTimeout(() => setLoading(false), 1000);
+    return () => clearTimeout(timer);
+  }, []);
 
-  if (loading) return <div className="text-center py-10">Loading services...</div>
-  if (error) return <div className="text-center py-10 text-red-500">{error}</div>
+  if (loading)
+    return (
+      <div className="flex flex-col items-center justify-center h-64">
+        <div className="w-10 h-10 border-4 border-[#B88A2F]/30 border-t-[#B88A2F] rounded-full animate-spin"></div>
+        <p className="mt-4 text-gray-600 text-sm font-medium">
+          Loading subjects...
+        </p>
+      </div>
+    );
 
   return (
     <section className="bg-[#faf4e4]">
-    <section className="bg-white shape-wavy-br-services">
-      <section className="mx-auto max-w-7xl px-6 md:px-10 py-16">
-        <header className="mx-auto max-w-3xl text-center mb-12">
-          <p className="text-sm font-medium text-primary tracking-wide uppercase">Practice Areas</p>
-          <h2 className="mt-3 text-4xl md:text-5xl font-serif font-bold text-balance text-foreground">Our Services</h2>
-          <p className="mt-4 text-muted-foreground text-pretty">
-            Strategic counsel delivered with precision. Explore our key practice areas where experience, discretion, and
-            results come together.
-          </p>
-        </header>
+      <section className="bg-white shape-wavy-br-services">
+        <section className="mx-auto max-w-7xl px-6 md:px-10 py-16">
+          {/* Section Header */}
+          <header className="mx-auto max-w-3xl text-center mb-12">
+            <p className="text-sm font-medium text-[#B88A2F] tracking-wide uppercase">
+              Our Fields
+            </p>
+            <h2 className="mt-3 text-4xl md:text-5xl font-serif font-bold text-gray-900">
+              Subjects We Teach
+            </h2>
+            <p className="mt-4 text-gray-600 leading-relaxed">
+              At <span className="font-semibold text-[#B88A2F]">UpHomeTuition</span>, we provide expert tutoring across
+              all major subjects — blending personalized attention with
+              modern teaching techniques to help students achieve academic
+              excellence.
+            </p>
+          </header>
 
-        {services.length === 0 ? (
-          <div className="text-center text-muted-foreground">No services found.</div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {services.map((service) => (
-              <ServiceCard
-                key={service._id || service.id}
-                name={service.name}
-                slug={service.slug}
-                imageUrl={service.imageUrl ? `${API_BASE}${service.imageUrl}` : null}
-              />
+          {/* Subject Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {subjects.map((subject) => (
+              <div
+                key={subject.id}
+                className="bg-[#fffaf3] rounded-2xl p-6 border border-[#ecd9b7] shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300"
+              >
+                <h3 className="text-xl font-semibold text-[#3b2f14] mb-2">
+                  {subject.name}
+                </h3>
+                <p className="text-sm text-[#8a7b61] font-medium mb-3">
+                  {subject.classes}
+                </p>
+                <p className="text-gray-700 text-sm leading-relaxed">
+                  {subject.description}
+                </p>
+              </div>
             ))}
           </div>
-        )}
 
-        <div className="mt-10 flex justify-center">
-          <a
-            href="/services"
-            className="inline-flex items-center rounded-md border border-primary/30 bg-background px-4 py-2 text-sm font-medium text-primary hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
-          >
-            View all services
-          </a>
-        </div>
+          {/* Button */}
+          <div className="mt-12 flex justify-center">
+            <a
+              href="#contact"
+              className="inline-flex items-center rounded-full border border-[#B88A2F] bg-[#B88A2F] text-white px-6 py-2.5 text-sm font-medium hover:bg-[#9c7629] transition-all duration-300 shadow-sm"
+            >
+              Find Your Tutor
+            </a>
+          </div>
+        </section>
       </section>
     </section>
-    </section>
-  )
+  );
 }
 
-export default Services
+export default Services;
