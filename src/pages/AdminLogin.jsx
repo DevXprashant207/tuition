@@ -51,7 +51,7 @@ function AdminLogin() {
         <div className="flex flex-col items-center mb-2">
           <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Admin Login" className="h-14 mb-2 rounded-full shadow-lg border border-[#e5e2dc] bg-white" />
           <h2 className="text-3xl font-bold text-[#cfac33] mb-2">Admin Login</h2>
-          <span className="text-[#f5c56d] text-sm font-medium">Gupta Law Offices</span>
+          <span className="text-[#f5c56d] text-sm font-medium">Up Home Tuitions</span>
           <span className="text-xs text-[#7c6a4c] mt-1 italic">Secure access for authorized personnel only</span>
         </div>
         <div>

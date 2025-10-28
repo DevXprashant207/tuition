@@ -16,32 +16,38 @@ function CaseCard({ title, category, description }) {
 function HomeCaseStudies() {
   const [index, setIndex] = useState(0);
   const cases = [
-    {
-      title: 'Family Law Victory',
-      category: 'Family Law',
-      description: 'Secured custody rights for our client in a complex family dispute, ensuring child welfare and parental justice.'
-    },
-    {
-      title: 'Corporate Dispute Resolution',
-      category: 'Corporate Law',
-      description: 'Resolved a multi-million dollar shareholder conflict, protecting business interests and future growth.'
-    },
-    {
-      title: 'Property Settlement Success',
-      category: 'Real Estate',
-      description: 'Negotiated a favorable property settlement for a client, overcoming legal and regulatory hurdles.'
-    },
-    {
-      title: 'Criminal Defense Acquittal',
-      category: 'Criminal Law',
-      description: 'Achieved acquittal for a client in a high-profile criminal case, demonstrating expert legal strategy.'
-    },
-    {
-      title: 'Insurance Claim Win',
-      category: 'Insurance Law',
-      description: 'Won a disputed insurance claim, securing financial relief for our client against a major insurer.'
-    },
-  ];
+  {
+    title: "Top Scorer in Board Exams",
+    category: "Class 12 CBSE",
+    description:
+      "Our student improved from 70% to 94% in just six months with personalized one-on-one tutoring and consistent progress tracking.",
+  },
+  {
+    title: "Confidence Boost in Mathematics",
+    category: "Class 10 ICSE",
+    description:
+      "Helped a struggling student overcome math anxiety through interactive learning sessions and regular concept-based tests.",
+  },
+  {
+    title: "IELTS Success Story",
+    category: "English Proficiency",
+    description:
+      "Guided a student to achieve an overall band score of 8.0 in IELTS with tailored speaking and writing practice.",
+  },
+  {
+    title: "Entrance Exam Excellence",
+    category: "Engineering Entrance",
+    description:
+      "Our focused coaching enabled a student to secure a top 5% rank in the JEE Mains, leading to admission in a reputed college.",
+  },
+  {
+    title: "Academic Improvement in Science",
+    category: "Class 9 CBSE",
+    description:
+      "A student improved understanding in Physics and Chemistry through visual explanations and real-life examples, boosting grades significantly.",
+  },
+];
+
   const visibleCount = 4;
   const visible = cases.slice(index, index + visibleCount);
   while (visible.length < visibleCount) visible.push(...cases.slice(0, visibleCount - visible.length));
@@ -59,8 +65,8 @@ function HomeCaseStudies() {
       </div>
       <div className="relative z-10 max-w-6xl mx-auto">
         <div className="flex items-center justify-between mb-8">
-          <h2 className="text-3xl md:text-4xl font-serif font-bold text-black drop-shadow-lg">Case Studies</h2>
-          <a href="/blog" className="text-black  font-semibold text-base flex items-center gap-1 hover:underline">VIEW ALL CASES &rarr;</a>
+          <h2 className="text-3xl md:text-4xl font-serif font-bold text-black drop-shadow-lg">Articles</h2>
+          <a href="/blog" className="text-black  font-semibold text-base flex items-center gap-1 hover:underline">VIEW ALL ARTiCLES &rarr;</a>
         </div>
         <div className="flex gap-6 justify-center mb-8 flex-wrap">
           {visible.map((c, i) => <CaseCard key={i} {...c} />)}

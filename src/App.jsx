@@ -1,5 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { Phone, MessageCircle } from "lucide-react"; // ✅ Import icons
 import Navbar from "./components/Navbar";
 import Topbar from "./components/Topbar";
 import Footer from "./components/Footer";
@@ -22,21 +23,19 @@ import News from "./pages/News";
 import NewsDetail from "./pages/NewsDetail";
 import AdminNews from "./pages/AdminNews";
 
-import DisclaimerModal from "./components/DisclaimerModal";
+import TutorPopupModal from "./components/TutorPopupModal";
 import "./App.css";
 
 function App() {
   const [hasAgreed, setHasAgreed] = useState(false);
   const [showDisclaimer, setShowDisclaimer] = useState(false);
 
+  // 👇 Show disclaimer on every reload (no localStorage)
   useEffect(() => {
-    const agreed = localStorage.getItem("disclaimerAgreed");
-    if (agreed === "true") setHasAgreed(true);
-    else setShowDisclaimer(true);
+    setShowDisclaimer(true);
   }, []);
 
   const handleAgree = () => {
-    localStorage.setItem("disclaimerAgreed", "true");
     setHasAgreed(true);
     setShowDisclaimer(false);
   };
@@ -48,7 +47,9 @@ function App() {
           showDisclaimer ? "blur-sm scale-[0.99]" : ""
         }`}
       >
-        <Topbar/>
+        <Topbar />
+        {/* Horizontal Line after Topbar */}
+        <hr className="border-t border-[#cbb26a] opacity-70" />
         <Navbar />
 
         <div className="flex-1">
@@ -84,11 +85,38 @@ function App() {
         <Footer />
       </div>
 
+      {/* Disclaimer / Popup */}
       {showDisclaimer && (
         <div className="absolute inset-0 z-50 flex items-center justify-center">
-          <DisclaimerModal onAgree={handleAgree} />
+          <TutorPopupModal onClose={() => setShowDisclaimer(false)} />
         </div>
       )}
+
+            {/* ✅ Floating Action Buttons — Professional Design */}
+      <a
+        href="https://wa.me/9118706214" // replace with your WhatsApp number
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-6 left-6 z-50 flex items-center justify-center w-14 h-14 rounded-full 
+        bg-gradient-to-br from-green-500 to-green-600 text-white shadow-[0_0_20px_rgba(37,211,102,0.5)] 
+        hover:shadow-[0_0_30px_rgba(37,211,102,0.8)] backdrop-blur-md 
+        border border-white/20 hover:scale-110 transition-all duration-300 ease-out"
+        title="Chat on WhatsApp"
+      >
+        <MessageCircle className="w-6 h-6" strokeWidth={2.2} />
+      </a>
+
+      <a
+        href="tel:+91 9118706214" // replace with your phone number
+        className="fixed bottom-6 right-6 z-50 flex items-center justify-center w-14 h-14 rounded-full 
+        bg-gradient-to-br from-blue-600 to-blue-700 text-white shadow-[0_0_20px_rgba(10,102,194,0.5)] 
+        hover:shadow-[0_0_30px_rgba(10,102,194,0.8)] backdrop-blur-md 
+        border border-white/20 hover:scale-110 transition-all duration-300 ease-out"
+        title="Call Now"
+      >
+        <Phone className="w-6 h-6" strokeWidth={2.2} />
+      </a>
+
     </div>
   );
 }

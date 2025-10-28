@@ -2,48 +2,49 @@ import React, { useState } from 'react';
 
 const testimonials = [
   {
-  name: 'Naman Gupta',
-    location: 'Gate-Number-Two, T-93/I, opposite Saket-District-Court, Khirki Extension, Malviya Nagar, New Delhi, Delhi 110017',
-    text: 'The tours in this website are great. I had been really enjoy with my family! The team is very professional and taking care of the customers. Will surely recommend to my friend to join this company!',
+    name: 'Ananya Verma',
+    location: 'Raj Nagar, Ghaziabad',
+    text: 'UpHomeTuitions helped me improve my grades in Maths within just two months! The tutor explained every concept patiently and made learning fun.',
     stars: 5,
-    image: 'https://randomuser.me/api/portraits/women/44.jpg',
-  },
-  {
-    name: 'Christopher Thompson',
-    location: 'Washington',
-    text: 'The legal team exceeded my expectations. They were professional, responsive, and truly cared about my case. Highly recommended!',
-    stars: 5,
-    image: 'https://randomuser.me/api/portraits/men/32.jpg',
-  },
-  {
-    name: 'Elizabeth Brown',
-    location: 'Los Angeles',
-    text: 'I felt supported throughout the process. The lawyers explained everything clearly and made me feel confident in my decisions.',
-    stars: 4.5,
     image: 'https://randomuser.me/api/portraits/women/65.jpg',
   },
   {
-    name: 'Michael Lee',
-    location: 'New York',
-    text: 'Excellent service and attention to detail. The team handled my case with expertise and compassion.',
+    name: 'Rohit Mehta',
+    location: 'Indirapuram, Ghaziabad',
+    text: 'As a parent, I am very satisfied. My son’s confidence has grown a lot since joining UpHomeTuitions. The tutors are punctual and very professional.',
     stars: 5,
-    image: 'https://randomuser.me/api/portraits/men/54.jpg',
+    image: 'https://randomuser.me/api/portraits/men/45.jpg',
   },
   {
-    name: 'Priya Sharma',
-    location: 'Chicago',
-    text: 'Very professional and knowledgeable lawyers. I am grateful for their help and would recommend them to anyone.',
+    name: 'Simran Kaur',
+    location: 'Vasundhara, Delhi NCR',
+    text: 'I was struggling in Science, but after joining UpHomeTuitions, I started scoring above 90%. The personal attention and test practice really helped me!',
     stars: 4.5,
-    image: 'https://randomuser.me/api/portraits/women/68.jpg',
+    image: 'https://randomuser.me/api/portraits/women/70.jpg',
   },
   {
-    name: 'David Kim',
-    location: 'Houston',
-    text: 'Quick response and great results. The team made a stressful situation much easier to handle.',
+    name: 'Aditya Singh',
+    location: 'Noida Sector 62',
+    text: 'Very dedicated teachers! They make sure students actually understand the topic instead of just memorizing it. Highly recommend for school students.',
     stars: 5,
-    image: 'https://randomuser.me/api/portraits/men/23.jpg',
+    image: 'https://randomuser.me/api/portraits/men/34.jpg',
+  },
+  {
+    name: 'Neha Kapoor',
+    location: 'Saket, New Delhi',
+    text: 'The best part about UpHomeTuitions is the flexibility and personal care. My daughter loves her English sessions now. Totally worth it!',
+    stars: 5,
+    image: 'https://randomuser.me/api/portraits/women/52.jpg',
+  },
+  {
+    name: 'Arjun Malhotra',
+    location: 'Kaushambi, Ghaziabad',
+    text: 'Very professional tutors who genuinely care about students’ growth. My child improved from 75% to 92% in just one term!',
+    stars: 5,
+    image: 'https://randomuser.me/api/portraits/men/29.jpg',
   },
 ];
+
 
 function StarRating({ stars }) {
   const fullStars = Math.floor(stars);
@@ -70,7 +71,7 @@ function HomeTestimonials() {
         <span className="text-[7vw] font-bold uppercase text-[#e5e2dc] opacity-10 md:opacity-15" style={{letterSpacing: '0.1em'}}>TESTIMONIALS</span>
       </div>
       <div className="relative z-10 max-w-6xl mx-auto">
-        <h2 className="text-3xl md:text-5xl font-serif font-bold text-[#23293a] text-center mb-10">What Our Clients Say</h2>
+        <h2 className="text-3xl md:text-5xl font-serif font-bold text-[#23293a] text-center mb-10">Feedback of parents</h2>
   <div className="flex flex-col md:flex-row gap-4 md:gap-6 justify-center items-center w-full ">
           {Array.from({ length: visibleCount }).map((_, idx) => {
             const i = (active + idx) % total;
