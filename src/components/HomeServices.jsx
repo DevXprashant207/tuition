@@ -123,7 +123,7 @@ function Services() {
           {/* Button */}
           <div className="mt-12 flex justify-center">
             <a
-              href="#contact"
+              href="/becomeaTutor"
               className="inline-flex items-center rounded-full border border-[#B88A2F] bg-[#B88A2F] text-white px-6 py-2.5 text-sm font-medium hover:bg-[#9c7629] transition-all duration-300 shadow-sm"
             >
               Find Your Tutor

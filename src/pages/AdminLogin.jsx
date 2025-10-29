@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -9,9 +8,14 @@ function AdminLogin() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  // 🔒 Temporary credentials
+  const TEMP_EMAIL = "admin@uptuition.com";
+  const TEMP_PASSWORD = "BrightMinds123";
+
+  const handleSubmit = (e) => {
     e.preventDefault();
     setError('');
+
     if (!email || !password) {
       setError('Please enter both email and password.');
       return;
@@ -20,40 +24,37 @@ function AdminLogin() {
       setError('Please enter a valid email address.');
       return;
     }
+
     setLoading(true);
-    try {
-      const res = await fetch('https://law-firm-backend-e082.onrender.com/api/admin/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        setError(data.error || 'Incorrect email/password');
-        setLoading(false);
-        return;
-      }
-      localStorage.setItem('token', data.token);
-      setTimeout(() => {
+    setTimeout(() => {
+      if (email === TEMP_EMAIL && password === TEMP_PASSWORD) {
+        localStorage.setItem('token', 'temporary-token-12345');
         navigate('/admin');
-      }, 200); // Fast transition
-    } catch (err) {
-      setError('Network error. Please try again.');
+      } else {
+        setError('Incorrect email or password.');
+      }
       setLoading(false);
-    }
-    setLoading(false);
+    }, 1000); // Simulate small delay for UX
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#f8f6f2] to-[#e5e2dc] font-serif relative">
       <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1503676382389-4809596d5290?auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center opacity-10 pointer-events-none"></div>
+
       <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-2xl p-10 w-full max-w-md animate-fade flex flex-col gap-6 border border-[#e5e2dc]">
         <div className="flex flex-col items-center mb-2">
-          <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Admin Login" className="h-14 mb-2 rounded-full shadow-lg border border-[#e5e2dc] bg-white" />
+          <img
+            src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+            alt="Admin Login"
+            className="h-14 mb-2 rounded-full shadow-lg border border-[#e5e2dc] bg-white"
+          />
           <h2 className="text-3xl font-bold text-[#cfac33] mb-2">Admin Login</h2>
           <span className="text-[#f5c56d] text-sm font-medium">Up Home Tuitions</span>
-          <span className="text-xs text-[#7c6a4c] mt-1 italic">Secure access for authorized personnel only</span>
+          <span className="text-xs text-[#7c6a4c] mt-1 italic">
+            Secure access for authorized personnel only
+          </span>
         </div>
+
         <div>
           <label className="block text-[#4c3a1a] mb-2 font-semibold">Email</label>
           <input
@@ -66,6 +67,7 @@ function AdminLogin() {
             autoComplete="username"
           />
         </div>
+
         <div>
           <label className="block text-[#4c3a1a] mb-2 font-semibold">Password</label>
           <input
@@ -78,7 +80,9 @@ function AdminLogin() {
             autoComplete="current-password"
           />
         </div>
+
         {error && <div className="mb-2 text-red-600 text-sm text-center animate-fade-in">{error}</div>}
+
         <button
           type="submit"
           className="w-full bg-[#cfac33] text-white py-2 rounded font-semibold shadow hover:bg-[#cfac33] transition-all disabled:opacity-50 text-lg"
@@ -86,10 +90,15 @@ function AdminLogin() {
         >
           {loading ? (
             <span className="flex items-center justify-center gap-2">
-              <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" /></svg>
+              <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+              </svg>
               Logging in...
             </span>
-          ) : 'Login'}
+          ) : (
+            'Login'
+          )}
         </button>
       </form>
     </div>

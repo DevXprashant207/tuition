@@ -1,25 +1,33 @@
-import React, { useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Phone } from 'lucide-react';
+"use client";
+
+import React, { useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Phone } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 function TutorPopupModal({ onClose }) {
+  const navigate = useNavigate();
+
   // Disable background scroll when modal opens
   useEffect(() => {
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
     return () => {
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = "auto";
     };
   }, []);
 
+  // Internal navigation (using React Router)
   const handleJoinTutor = () => {
-    window.open('https://your-join-tutor-link.com', '_blank'); // replace with actual link
+    onClose();
+    navigate("/becomeaTutor");
   };
 
   const handleHireTutor = () => {
-    window.open('https://your-hire-tutor-link.com', '_blank'); // replace with actual link
+    onClose();
+    navigate("/hireTutor");
   };
 
-  const phoneNumber = '+91 9118706214';
+  const phoneNumber = "+91 9118706214";
 
   return (
     <AnimatePresence>
@@ -56,7 +64,10 @@ function TutorPopupModal({ onClose }) {
                 </h3>
                 <p className="text-gray-600 text-sm mt-1 flex items-center justify-center sm:justify-start gap-1">
                   <Phone className="w-4 h-4 text-[#B88A2F]" />
-                  <a href={`tel:${phoneNumber}`} className="text-[#002b6b] font-medium hover:underline">
+                  <a
+                    href={`tel:${phoneNumber}`}
+                    className="text-[#002b6b] font-medium hover:underline"
+                  >
                     {phoneNumber}
                   </a>
                 </p>
@@ -84,7 +95,10 @@ function TutorPopupModal({ onClose }) {
                 </h3>
                 <p className="text-gray-600 text-sm mt-1 flex items-center justify-center sm:justify-start gap-1">
                   <Phone className="w-4 h-4 text-[#B88A2F]" />
-                  <a href={`tel:${phoneNumber}`} className="text-[#002b6b] font-medium hover:underline">
+                  <a
+                    href={`tel:${phoneNumber}`}
+                    className="text-[#002b6b] font-medium hover:underline"
+                  >
                     {phoneNumber}
                   </a>
                 </p>
